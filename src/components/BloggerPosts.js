@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const BloggerPosts = () => {
     const [posts, setPosts] = useState([]);
+    const [postCount, setPostCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -15,6 +16,7 @@ const BloggerPosts = () => {
                     },
                 });
                 setPosts(response.data.items);
+                setPostCount(response.data.items.length); // Set the post count
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -31,6 +33,7 @@ const BloggerPosts = () => {
     return (
         <div>
             <h1>Blogger Posts</h1>
+            <p>Total Posts: {postCount}</p> {/* Display post count */}
             <ul>
                 {posts.map((post) => (
                     <li key={post.id}>
