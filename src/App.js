@@ -1,5 +1,6 @@
 import React from 'react';
 import BloggerPosts from './components/BloggerPosts';
+import CreatePost from './components/CreatePost';
 
 const App = () => {
     return (
@@ -8,6 +9,7 @@ const App = () => {
                 <h1>My Blogger Posts</h1>
             </header>
             <main>
+                <CreatePost />
                 <BloggerPosts />
             </main>
         </div>
