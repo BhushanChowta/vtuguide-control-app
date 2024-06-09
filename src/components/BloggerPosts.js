@@ -23,6 +23,9 @@ const BloggerPosts = ({ onEdit }) => {
     }, []);
 
     const handleDelete = async (postId) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this post?');
+        if (!confirmDelete) return;
+        
         setLoading(true);
         try {
             await axios.delete(`http://localhost:5000/api/delete-post/${postId}`);
