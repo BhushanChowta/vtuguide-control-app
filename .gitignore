@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#backend
+# Ignore .env files
+/backend/.env
+# Ignore credentials.json and token.json files
+/backend/credentials.json
+/backend/token.json
