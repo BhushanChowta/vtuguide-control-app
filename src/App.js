@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BloggerPosts from './components/BloggerPosts';
 import CreatePost from './components/CreatePost';
+import EditPost from './components/EditPost';
 
 const App = () => {
+    const [editingPost, setEditingPost] = useState(null);
+
     return (
         <div className="App">
             <header className="App-header">
@@ -10,7 +13,15 @@ const App = () => {
             </header>
             <main>
                 <CreatePost />
-                <BloggerPosts />
+                {editingPost && (
+                    <EditPost 
+                        postId={editingPost.id} 
+                        existingTitle={editingPost.title} 
+                        existingContent={editingPost.content} 
+                        onClose={() => setEditingPost(null)}
+                    />
+                )}
+                <BloggerPosts onEdit={setEditingPost} />
             </main>
         </div>
     );

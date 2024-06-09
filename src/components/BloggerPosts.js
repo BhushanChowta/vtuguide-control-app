@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const BloggerPosts = () => {
+const BloggerPosts = ({ onEdit }) => {
     const [posts, setPosts] = useState([]);
-    const [postCount, setPostCount] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchPosts = async () => {
+            setLoading(true);
             try {
-                const response = await axios.get('https://www.googleapis.com/blogger/v3/blogs/3185259583519338460/posts', {
-                    params: {
-                        key: 'AIzaSyBZJpGBYasuvDVg25Mi7dffmG-llYDZi7k',
-                    },
-                });
+                const response = await axios.get('http://localhost:5000/api/posts');
                 setPosts(response.data.items);
-                setPostCount(response.data.items.length); // Set the post count
-                setLoading(false);
             } catch (error) {
-                setError(error);
+                setError(error.message);
+            } finally {
                 setLoading(false);
             }
         };
@@ -27,18 +22,17 @@ const BloggerPosts = () => {
         fetchPosts();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error fetching posts</div>;
-
     return (
         <div>
-            <h1>Blogger Posts</h1>
-            <p>Total Posts: {postCount}</p> {/* Display post count */}
+            <h2>Blogger Posts</h2>
+            {loading && <p>Loading...</p>}
+            {error && <p>Error: {error}</p>}
             <ul>
                 {posts.map((post) => (
                     <li key={post.id}>
-                        <h2>{post.title}</h2>
+                        <h3>{post.title}</h3>
                         <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                        <button onClick={() => onEdit(post)}>Edit</button>
                     </li>
                 ))}
             </ul>

@@ -21,6 +21,23 @@ oauth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN,
 });
 
+app.get('/api/posts', async (req, res) => {
+    try {
+        const blogger = google.blogger({
+            version: 'v3',
+            auth: oauth2Client,
+        });
+
+        const response = await blogger.posts.list({
+            blogId: process.env.BLOG_ID,
+        });
+
+        res.status(200).json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.post('/api/create-post', async (req, res) => {
     const { title, content } = req.body;
 
@@ -37,6 +54,32 @@ app.post('/api/create-post', async (req, res) => {
                 content: content,
             },
             isDraft: true, // Set the post to be a draft
+        });
+
+        res.status(200).json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+app.put('/api/edit-post/:postId', async (req, res) => {
+    const { postId } = req.params;
+    const { title, content } = req.body;
+
+    try {
+        const blogger = google.blogger({
+            version: 'v3',
+            auth: oauth2Client,
+        });
+
+        const response = await blogger.posts.update({
+            blogId: process.env.BLOG_ID,
+            postId: postId,
+            requestBody: {
+                title: title,
+                content: content,
+            },
         });
 
         res.status(200).json(response.data);
