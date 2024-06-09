@@ -88,6 +88,27 @@ app.put('/api/edit-post/:postId', async (req, res) => {
     }
 });
 
+app.delete('/api/delete-post/:postId', async (req, res) => {
+    const { postId } = req.params;
+
+    try {
+        const blogger = google.blogger({
+            version: 'v3',
+            auth: oauth2Client,
+        });
+
+        await blogger.posts.delete({
+            blogId: process.env.BLOG_ID,
+            postId: postId,
+        });
+
+        res.status(200).json({ message: 'Post deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

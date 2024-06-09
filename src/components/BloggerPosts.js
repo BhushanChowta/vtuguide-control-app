@@ -22,6 +22,18 @@ const BloggerPosts = ({ onEdit }) => {
         fetchPosts();
     }, []);
 
+    const handleDelete = async (postId) => {
+        setLoading(true);
+        try {
+            await axios.delete(`http://localhost:5000/api/delete-post/${postId}`);
+            setPosts(posts.filter(post => post.id !== postId));
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
             <h2>Blogger Posts</h2>
@@ -33,6 +45,7 @@ const BloggerPosts = ({ onEdit }) => {
                         <h3>{post.title}</h3>
                         <div dangerouslySetInnerHTML={{ __html: post.content }} />
                         <button onClick={() => onEdit(post)}>Edit</button>
+                        <button onClick={() => handleDelete(post.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
