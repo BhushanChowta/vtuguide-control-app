@@ -102,7 +102,7 @@ app.delete('/api/delete-post/:postId', async (req, res) => {
             postId: postId,
         });
 
-        res.status(200).json({ message: 'Post deleted successfully' });
+        res.status(200).json({ message: `${postId} Post deleted successfully` });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
