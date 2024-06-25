@@ -34,7 +34,8 @@ app.get('/api/posts', async (req, res) => {
 
         res.status(200).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching posts:', error.response ? error.response.data : error.message); // Log the error details
+        res.status(500).json({ error: error.response ? error.response.data : error.message });
     }
 });
 
@@ -58,10 +59,10 @@ app.post('/api/create-post', async (req, res) => {
 
         res.status(200).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating post:', error.response ? error.response.data : error.message); // Log the error details
+        res.status(500).json({ error: error.response ? error.response.data : error.message });
     }
 });
-
 
 app.put('/api/edit-post/:postId', async (req, res) => {
     const { postId } = req.params;
@@ -84,7 +85,8 @@ app.put('/api/edit-post/:postId', async (req, res) => {
 
         res.status(200).json(response.data);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error editing post:', error.response ? error.response.data : error.message); // Log the error details
+        res.status(500).json({ error: error.response ? error.response.data : error.message });
     }
 });
 
@@ -104,10 +106,10 @@ app.delete('/api/delete-post/:postId', async (req, res) => {
 
         res.status(200).json({ message: `${postId} Post deleted successfully` });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error deleting post:', error.response ? error.response.data : error.message); // Log the error details
+        res.status(500).json({ error: error.response ? error.response.data : error.message });
     }
 });
-
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
