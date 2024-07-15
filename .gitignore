@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+/frontend/node_modules
 /.pnp
 .pnp.js
 
@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 #backend
+/backend/node_modules
 # Ignore .env files
 /backend/.env
 # Ignore credentials.json and token.json files
