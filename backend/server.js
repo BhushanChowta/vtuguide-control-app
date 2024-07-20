@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-const { google } = require('googleapis');
+// const { google } = require('googleapis');
 require('dotenv').config();
 const cors = require('cors');
 
@@ -19,6 +19,39 @@ const oauth2Client = new google.auth.OAuth2(
 
 oauth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN,
+});
+
+app.post('/api/blogger', async (req, res) => {
+  const { accessToken } = req.body;
+
+  try {
+    
+  console.log("accessToken",accessToken);
+    const response = await axios.get('https://www.googleapis.com/blogger/v3/users/self/blogs', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error('Error fetching Blogger data:', error);
+    res.status(500).send('Error fetching Blogger data');
+  }
+});
+
+app.get('/api/blogger/posts', async (req, res) => {
+  const { blogId, accessToken } = req.query;
+
+  try {
+    const response = await axios.get(`https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
 });
 
 app.get('/api/posts', async (req, res) => {
