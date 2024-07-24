@@ -1,12 +1,12 @@
-// src/App.js
 import React, { useState } from 'react';
 import GoogleProvider from './components/GoogleProvider';
 import GoogleLoginComponent from './components/GoogleLoginComponent';
+import AnalyticsComponent from './components/AnalyticsComponent';
 import axios from 'axios';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [accessToken, setAccessToken] = useState([]); 
+  const [accessToken, setAccessToken] = useState(null); 
   const [selectedBlogId, setSelectedBlogId] = useState(null);
   const [posts, setPosts] = useState([]);
 
@@ -34,22 +34,25 @@ const App = () => {
   return (
     <GoogleProvider>
       <div className="App">
-        <h1>Google Login with Blogger API</h1>
-        <GoogleLoginComponent setBlogs={setBlogs} setAccessToken={setAccessToken} setSelectedBlogId={setSelectedBlogId} />
-        <div>
-          <h2>Blogs:</h2>
-          {blogs.length > 0 ? (
-            <ul>
-              {blogs.map((blog) => (
-                <li key={blog.id} onClick={() => handleBlogSelect(blog.id)}>
-                  {blog.name}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No blogs found.</p>
-          )}
-        </div>
+        {!accessToken &&
+          <GoogleLoginComponent setBlogs={setBlogs} setAccessToken={setAccessToken} setSelectedBlogId={setSelectedBlogId} />
+        }
+        {accessToken && !selectedBlogId && (
+          <div>
+            <h2>Blogs:</h2>
+            {blogs.length > 0 ? (
+              <ul>
+                {blogs.map((blog) => (
+                  <li key={blog.id} onClick={() => handleBlogSelect(blog.id)}>
+                    {blog.name}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No blogs found.</p>
+            )}
+          </div>
+        )}
         {selectedBlogId && (
           <div>
             <h2>Posts for Selected Blog:</h2>
@@ -64,6 +67,7 @@ const App = () => {
             )}
           </div>
         )}
+        {selectedBlogId && <AnalyticsComponent accessToken={accessToken} />}
       </div>
     </GoogleProvider>
   );

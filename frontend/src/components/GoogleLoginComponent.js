@@ -6,8 +6,9 @@ import axios from 'axios';
 
 const GoogleLoginComponent = ({ setBlogs, setAccessToken }) => {
   const login = useGoogleLogin({
+    scope: 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/blogger',
     onSuccess: async (tokenResponse) => {
-      console.log("tokenResponse",tokenResponse);
+      console.log("tokenResponse", tokenResponse);
       const accessToken = tokenResponse.access_token;
       setAccessToken(accessToken); // Set the access token here
       await fetchBloggerData(accessToken);
@@ -30,9 +31,12 @@ const GoogleLoginComponent = ({ setBlogs, setAccessToken }) => {
   };
 
   return (
-    <button onClick={() => login()}>
-      Login with Google
-    </button>
+    <>
+      <h1>Google Login</h1>
+      <button onClick={() => login()}>
+        Login with Google
+      </button>
+    </>
   );
 };
 
