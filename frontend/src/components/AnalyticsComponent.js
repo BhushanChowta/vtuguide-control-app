@@ -18,13 +18,13 @@ const AnalyticsComponent = ({ accessToken }) => {
         {
           "dateRanges": [
             {
-              "startDate": "2023-01-01",
-              "endDate": "2023-12-31"
+              "startDate": "2022-01-01",
+              "endDate": "2024-06-30"
             }
           ],
           "dimensions": [
             {
-              "name": "pageTitle"
+              "name": "country"
             }
           ],
           "metrics": [
