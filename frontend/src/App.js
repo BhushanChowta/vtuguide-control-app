@@ -53,6 +53,7 @@ const App = () => {
             )}
           </div>
         )}
+        {selectedBlogId && <AnalyticsComponent accessToken={accessToken} />}
         {selectedBlogId && (
           <div>
             <h2>Posts for Selected Blog:</h2>
@@ -67,7 +68,6 @@ const App = () => {
             )}
           </div>
         )}
-        {selectedBlogId && <AnalyticsComponent accessToken={accessToken} />}
       </div>
     </GoogleProvider>
   );

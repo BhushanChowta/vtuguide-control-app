@@ -1,9 +1,10 @@
 // src/AnalyticsComponent.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Chart from 'react-apexcharts';
 
 const AnalyticsComponent = ({ accessToken }) => {
-  const [analyticsData, setAnalyticsData] = useState(null);
+  const [analyticsData, setAnalyticsData] = useState([]);
   const propertyId = process.env.REACT_APP_PROPERTY_ID;
   const apiKey = process.env.REACT_APP_API_KEY;
 
@@ -16,24 +17,24 @@ const AnalyticsComponent = ({ accessToken }) => {
     const requestData = {
       requests: [
         {
-          "dateRanges": [
+          dateRanges: [
             {
-              "startDate": "2022-01-01",
-              "endDate": "2024-06-30"
+              startDate: "2024-06-01",
+              endDate: "2024-06-30"
             }
           ],
-          "dimensions": [
+          dimensions: [
             {
-              "name": "country"
+              name: "date"
             }
           ],
-          "metrics": [
+          metrics: [
             {
-              "name": "activeUsers"
+              name: "screenPageViews" // Use "screenPageViews" for total views in GA4
             }
           ]
         }
-      ],  
+      ],
     };
 
     try {
@@ -48,7 +49,13 @@ const AnalyticsComponent = ({ accessToken }) => {
           },
         }
       );
-      setAnalyticsData(response.data);
+
+      const data = response.data.reports[0].rows.map(row => ({
+        date: row.dimensionValues[0].value,
+        views: parseInt(row.metricValues[0].value, 10)
+      }));
+
+      setAnalyticsData(data);
     } catch (error) {
       console.error('Error fetching reports:', error.response ? error.response.data : error.message);
     }
@@ -60,11 +67,30 @@ const AnalyticsComponent = ({ accessToken }) => {
     }
   }, [accessToken]);
 
+  const chartOptions = {
+    chart: {
+      type: 'bar'
+    },
+    xaxis: {
+      categories: analyticsData.map(data => data.date)
+    },
+    title: {
+      text: 'Total Views by Date'
+    }
+  };
+
+  const chartSeries = [
+    {
+      name: 'Total Views',
+      data: analyticsData.map(data => data.views)
+    }
+  ];
+
   return (
     <div>
       <h2>Analytics Data</h2>
-      {analyticsData ? (
-        <pre>{JSON.stringify(analyticsData, null, 2)}</pre>
+      {analyticsData.length > 0 ? (
+        <Chart options={chartOptions} series={chartSeries} type="bar" height={350} />
       ) : (
         <p>Loading...</p>
       )}
