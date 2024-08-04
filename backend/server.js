@@ -11,6 +11,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors()); // Enable CORS
 app.use(bodyParser.json());
 
+const blogger = google.blogger('v3');
+
 const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
@@ -73,27 +75,24 @@ app.get('/api/posts', async (req, res) => {
 });
 
 app.post('/api/create-post', async (req, res) => {
-    const { title, content } = req.body;
-
+    const { blogId, title, content, accessToken } = req.body;
+  
     try {
-        const blogger = google.blogger({
-            version: 'v3',
-            auth: oauth2Client,
-        });
-
+        const oauth2Client = new google.auth.OAuth2();
+        oauth2Client.setCredentials({ access_token: accessToken });
+    
         const response = await blogger.posts.insert({
-            blogId: process.env.BLOG_ID,
-            requestBody: {
-                title: title,
-                content: content,
-            },
-            isDraft: true, // Set the post to be a draft
+          auth: oauth2Client,
+          blogId: blogId,
+          requestBody: {
+            title: title,
+            content: content,
+          },
+          isDraft: true, // Set the post to be a draft
         });
-
         res.status(200).json(response.data);
-    } catch (error) {
-        console.error('Error creating post:', error.response ? error.response.data : error.message); // Log the error details
-        res.status(500).json({ error: error.response ? error.response.data : error.message });
+      } catch (error) {
+        res.status(error.response?.status || 500).json({ error: error.message });
     }
 });
 
