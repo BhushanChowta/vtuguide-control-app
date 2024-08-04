@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CreatePost = () => {
+const CreatePost = ({ blogId, accessToken }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
@@ -16,8 +16,10 @@ const CreatePost = () => {
 
         try {
             const response = await axios.post('http://localhost:5000/api/create-post', {
-                title: title,
-                content: content,
+                blogId,
+                title,
+                content,
+                accessToken
             });
 
             if (response.status === 200) {
