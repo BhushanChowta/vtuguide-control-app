@@ -34,6 +34,25 @@ const App = () => {
     }
   };
 
+  const handleDeletePost = async (postId, postTitle) => {
+    const confirmed = window.confirm(`Are you sure you want to delete the post "${postTitle}" from the blog "${blogs.find(blog => blog.id === selectedBlogId).name}"?`);
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5000/api/delete-post/${postId}`, {
+        data: {
+          blogId: selectedBlogId,
+          accessToken: accessToken,
+        },
+      });
+      setPosts(posts.filter(post => post.id !== postId));
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
+
   return (
     <GoogleProvider>
       <Router>
@@ -67,6 +86,7 @@ const App = () => {
                     <li key={post.id}>
                       {post.title}
                       <Link to={`/edit-post/${post.id}`} onClick={() => setSelectedPost(post)}>Edit</Link>
+                      {/* <button onClick={() => handleDeletePost(post.id, post.title)}>Delete</button> */}
                     </li>
                   ))}
                 </ul>

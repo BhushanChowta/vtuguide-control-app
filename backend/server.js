@@ -122,17 +122,18 @@ app.put('/api/edit-post/:postId', async (req, res) => {
 
 app.delete('/api/delete-post/:postId', async (req, res) => {
     const { postId } = req.params;
+    const { accessToken, blogId } = req.body;
 
     try {
-        const blogger = google.blogger({
-            version: 'v3',
-            auth: oauth2Client,
-        });
+        const oauth2Client = new google.auth.OAuth2();
+        oauth2Client.setCredentials({ access_token: accessToken });
 
-        await blogger.posts.delete({
-            blogId: process.env.BLOG_ID,
-            postId: postId,
+        const response = await blogger.posts.delete({
+          auth: oauth2Client,
+          blogId: blogId,
+          postId: postId,
         });
+        // res.status(200).json(response.data);
 
         res.status(200).json({ message: `${postId} Post deleted successfully` });
     } catch (error) {
