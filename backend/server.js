@@ -97,29 +97,27 @@ app.post('/api/create-post', async (req, res) => {
 });
 
 app.put('/api/edit-post/:postId', async (req, res) => {
-    const { postId } = req.params;
-    const { title, content } = req.body;
+  const { postId } = req.params;
+  const { title, content, accessToken, blogId } = req.body;
 
-    try {
-        const blogger = google.blogger({
-            version: 'v3',
-            auth: oauth2Client,
-        });
+  try {
+    const oauth2Client = new google.auth.OAuth2();
+    oauth2Client.setCredentials({ access_token: accessToken });
 
-        const response = await blogger.posts.update({
-            blogId: process.env.BLOG_ID,
-            postId: postId,
-            requestBody: {
-                title: title,
-                content: content,
-            },
-        });
+    const response = await blogger.posts.update({
+      auth: oauth2Client,
+      blogId: blogId,
+      postId: postId,
+      requestBody: {
+        title: title,
+        content: content,
+      },
+    });
 
-        res.status(200).json(response.data);
-    } catch (error) {
-        console.error('Error editing post:', error.response ? error.response.data : error.message); // Log the error details
-        res.status(500).json({ error: error.response ? error.response.data : error.message });
-    }
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
 });
 
 app.delete('/api/delete-post/:postId', async (req, res) => {
