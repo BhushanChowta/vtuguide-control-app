@@ -3,6 +3,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const { google } = require('googleapis');
 const logAction = require('./utils/logAction');
+const ActionLog = require('./models/ActionLog'); 
 require('dotenv').config();
 const cors = require('cors');
 
@@ -177,6 +178,26 @@ app.delete('/api/delete-post/:postId', async (req, res) => {
         console.error('Error deleting post:', error.response ? error.response.data : error.message); // Log the error details
         res.status(500).json({ error: error.response ? error.response.data : error.message });
     }
+});
+
+
+app.get('/api/actionlogs', async (req, res) => {
+  try {
+    const { blogId,accessToken } = req.query; // Get the blogId from query parameters
+    const userId = await fetchGoogleUserId(accessToken);
+
+    // Validate Params
+    if (!blogId || !userId) {
+      return res.status(400).json({ error: 'Blog ID & UserAccessToken is required' });
+    }
+
+    // Fetch action logs for the specific blogId from the database
+    const logs = await ActionLog.find({ blogId, userId });
+    res.status(200).json(logs);
+  } catch (error) {
+    console.error('Error fetching action logs:', error);
+    res.status(500).json({ error: 'Failed to fetch action logs' });
+  }
 });
 
 app.listen(PORT, () => {

@@ -4,7 +4,8 @@ import GoogleProvider from './components/GoogleProvider';
 import GoogleLoginComponent from './components/GoogleLoginComponent';
 import AnalyticsComponent from './components/AnalyticsComponent';
 import CreatePost from './components/CreatePost';
-import EditPost from './components/EditPost'; // Import EditPost component
+import EditPost from './components/EditPost'; 
+import ActionLogs from './pages/ActionLogs';
 import axios from 'axios';
 
 const App = () => {
@@ -96,10 +97,12 @@ const App = () => {
               <Link to="/create-post">Create New Post</Link>
             </div>
           )}
+          {selectedBlogId && <Link to="/actionlogs">Action Logs</Link>}
         </div>
         <Routes>
           <Route path="/create-post" element={<CreatePost blogId={selectedBlogId} accessToken={accessToken} />} />
           <Route path="/edit-post/:postId" element={<EditPost blogId={selectedBlogId} accessToken={accessToken}  postId={selectedPost?.id} existingTitle={selectedPost?.title} existingContent={selectedPost?.content} />} />
+          <Route path="/actionlogs" element={<ActionLogs blogId={selectedBlogId} accessToken={accessToken} />} />
         </Routes>
       </Router>
     </GoogleProvider>
