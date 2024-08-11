@@ -4,6 +4,8 @@ import GoogleProvider from './components/GoogleProvider';
 import GoogleLoginComponent from './components/GoogleLoginComponent';
 import AnalyticsComponent from './components/AnalyticsComponent';
 import CreatePost from './components/CreatePost';
+import EditPost from './components/EditPost'; 
+import ActionLogs from './pages/ActionLogs';
 import axios from 'axios';
 
 const App = () => {
@@ -11,6 +13,7 @@ const App = () => {
   const [accessToken, setAccessToken] = useState(null); 
   const [selectedBlogId, setSelectedBlogId] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null); // Add state for selected post
 
   const handleBlogSelect = async (blogId) => {
     setSelectedBlogId(blogId);
@@ -29,6 +32,25 @@ const App = () => {
       setPosts(response.data.items ?? []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
+    }
+  };
+
+  const handleDeletePost = async (postId, postTitle) => {
+    const confirmed = window.confirm(`Are you sure you want to delete the post "${postTitle}" from the blog "${blogs.find(blog => blog.id === selectedBlogId).name}"?`);
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5000/api/delete-post/${postId}`, {
+        data: {
+          blogId: selectedBlogId,
+          accessToken: accessToken,
+        },
+      });
+      setPosts(posts.filter(post => post.id !== postId));
+    } catch (error) {
+      console.error('Error deleting post:', error);
     }
   };
 
@@ -62,7 +84,11 @@ const App = () => {
               {posts.length > 0 ? (
                 <ul>
                   {posts.map((post) => (
-                    <li key={post.id}>{post.title}</li>
+                    <li key={post.id}>
+                      {post.title}
+                      <Link to={`/edit-post/${post.id}`} onClick={() => setSelectedPost(post)}>Edit</Link>
+                      {post.status=='DRAFT' && <button onClick={() => handleDeletePost(post.id, post.title)}>Delete</button>}
+                    </li>
                   ))}
                 </ul>
               ) : (
@@ -71,9 +97,12 @@ const App = () => {
               <Link to="/create-post">Create New Post</Link>
             </div>
           )}
+          {selectedBlogId && <Link to="/actionlogs">Action Logs</Link>}
         </div>
         <Routes>
           <Route path="/create-post" element={<CreatePost blogId={selectedBlogId} accessToken={accessToken} />} />
+          <Route path="/edit-post/:postId" element={<EditPost blogId={selectedBlogId} accessToken={accessToken}  postId={selectedPost?.id} existingTitle={selectedPost?.title} existingContent={selectedPost?.content} />} />
+          <Route path="/actionlogs" element={<ActionLogs blogId={selectedBlogId} accessToken={accessToken} />} />
         </Routes>
       </Router>
     </GoogleProvider>
@@ -81,35 +110,3 @@ const App = () => {
 };
 
 export default App;
-
-// import React, { useState } from 'react';
-// import BloggerPosts from './components/BloggerPosts';
-// import CreatePost from './components/CreatePost';
-// import EditPost from './components/EditPost';
-
-// const App = () => {
-//     const [editingPost, setEditingPost] = useState(null);
-
-//     return (
-//         <div className="App">
-//             <header className="App-header">
-//                 <h1>My Blogger Posts</h1>
-//             </header>
-//             <main>
-//                 <CreatePost />
-//                 {editingPost && (
-//                     <EditPost 
-//                         postId={editingPost.id} 
-//                         existingTitle={editingPost.title} 
-//                         existingContent={editingPost.content} 
-//                         onClose={() => setEditingPost(null)}
-//                     />
-//                 )}
-//                 <BloggerPosts onEdit={setEditingPost} />
-//             </main>
-//         </div>
-//     );
-// };
-
-// export default App;
-
