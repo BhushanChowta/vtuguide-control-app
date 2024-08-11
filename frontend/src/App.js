@@ -86,7 +86,7 @@ const App = () => {
                     <li key={post.id}>
                       {post.title}
                       <Link to={`/edit-post/${post.id}`} onClick={() => setSelectedPost(post)}>Edit</Link>
-                      {/* <button onClick={() => handleDeletePost(post.id, post.title)}>Delete</button> */}
+                      {post.status=='DRAFT' && <button onClick={() => handleDeletePost(post.id, post.title)}>Delete</button>}
                     </li>
                   ))}
                 </ul>
