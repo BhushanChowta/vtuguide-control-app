@@ -24,7 +24,7 @@ const App = () => {
 
   const fetchBlogPosts = async (blogId) => {
     try {
-      const response = await axios.get('http://localhost:5000/api/blogger/posts', {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blogger/posts`, {
         params: {
           blogId,
           accessToken
@@ -44,7 +44,7 @@ const App = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/delete-post/${postId}`, {
+      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/delete-post/${postId}`, {
         data: {
           blogId: selectedBlogId,
           accessToken,

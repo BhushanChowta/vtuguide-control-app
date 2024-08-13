@@ -22,7 +22,7 @@ const GoogleLoginComponent = () => {
 
   const fetchBloggerData = async (accessToken) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/blogger', {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/blogger`, {
         accessToken,
       });
       console.log('Blogger data:', response.data);

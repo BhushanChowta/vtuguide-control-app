@@ -16,7 +16,7 @@ const EditPost = () => {
     const fetchPostDetails = async () => {
       if (postId) {
         try {
-          const response = await axios.get(`http://localhost:5000/api/blogger/posts/${postId}`, {
+          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blogger/posts/${postId}`, {
             params: {
               blogId,
               accessToken,
@@ -41,7 +41,7 @@ const EditPost = () => {
     setSuccess(false);
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/edit-post/${postId}`, {
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/edit-post/${postId}`, {
         title,
         content,
         accessToken,
