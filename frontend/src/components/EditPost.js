@@ -1,12 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
-const EditPost = ({ blogId, postId, existingTitle, existingContent, accessToken }) => {
-  const [title, setTitle] = useState(existingTitle);
-  const [content, setContent] = useState(existingContent);
+const EditPost = () => {
+  const { postId } = useParams(); // Get postId from route parameters
+  const { selectedBlogId: blogId, accessToken } = useContext(AuthContext);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const fetchPostDetails = async () => {
+      if (postId) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/blogger/posts/${postId}`, {
+            params: {
+              blogId,
+              accessToken,
+            },
+          });
+          const post = response.data;
+          setTitle(post.title);
+          setContent(post.content);
+        } catch (error) {
+          console.error('Error fetching post details:', error);
+        }
+      }
+    };
+
+    fetchPostDetails();
+  }, [postId, blogId, accessToken]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,10 +42,10 @@ const EditPost = ({ blogId, postId, existingTitle, existingContent, accessToken 
 
     try {
       const response = await axios.put(`http://localhost:5000/api/edit-post/${postId}`, {
-        title: title,
-        content: content,
-        accessToken: accessToken, // Pass the access token
-        blogId: blogId // Pass the blog ID
+        title,
+        content,
+        accessToken,
+        blogId,
       });
 
       if (response.status === 200) {

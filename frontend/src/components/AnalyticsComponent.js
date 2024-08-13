@@ -1,9 +1,11 @@
 // src/AnalyticsComponent.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
+import { AuthContext } from '../contexts/AuthContext';
 
-const AnalyticsComponent = ({ accessToken }) => {
+const AnalyticsComponent = () => {
+  const { accessToken } = useContext(AuthContext);
   const [analyticsData, setAnalyticsData] = useState([]);
   const propertyId = process.env.REACT_APP_PROPERTY_ID;
   const apiKey = process.env.REACT_APP_API_KEY;

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
 
-const CreatePost = ({ blogId, accessToken }) => {
+const CreatePost = () => {
+    const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); // Access context values
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);

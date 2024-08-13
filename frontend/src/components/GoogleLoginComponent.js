@@ -1,10 +1,12 @@
-// src/GoogleLoginButton.js
 import React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext'; // Adjust the path as necessary
 
+const GoogleLoginComponent = () => {
+  const { setBlogs, setAccessToken } = useContext(AuthContext);
 
-const GoogleLoginComponent = ({ setBlogs, setAccessToken }) => {
   const login = useGoogleLogin({
     scope: 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/blogger',
     onSuccess: async (tokenResponse) => {
