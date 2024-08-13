@@ -57,7 +57,7 @@ const PostShow = () => {
       <h2>{post.title}</h2>
       <h4>{post.status === 'DRAFT' && <button onClick={() => handleDeletePost(post.id, post.title)}>Delete</button>}</h4>
       <h4><Link to={`/edit-post/${post.id}`}>Edit</Link></h4>
-      <p>{post.content}</p>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
     </div>
   );
 };
