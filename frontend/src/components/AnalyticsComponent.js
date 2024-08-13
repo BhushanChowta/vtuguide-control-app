@@ -92,7 +92,7 @@ const AnalyticsComponent = () => {
     <div>
       <h2>Analytics Data</h2>
       {analyticsData.length > 0 ? (
-        <Chart options={chartOptions} series={chartSeries} type="bar" height={350} />
+        <Chart options={chartOptions} series={chartSeries} type="bar" height={250} width={650} />
       ) : (
         <p>Loading...</p>
       )}

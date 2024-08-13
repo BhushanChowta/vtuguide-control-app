@@ -36,7 +36,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      {selectedBlogId && <AnalyticsComponent />}
       {!selectedBlogId && (
         <div>
           <h2>Blogs:</h2>
@@ -53,6 +52,9 @@ const Dashboard = () => {
           )}
         </div>
       )}
+      {selectedBlogId && <Link to="/actionlogs">Action Logs</Link>}||
+      {selectedBlogId && <Link to="/create-post">Create New Post</Link>}
+      {selectedBlogId && <AnalyticsComponent />}
       {selectedBlogId && (
         <div>
           <h2>Posts for Selected Blog:</h2>
@@ -67,10 +69,8 @@ const Dashboard = () => {
           ) : (
             <p>No posts found.</p>
           )}
-          <Link to="/create-post">Create New Post</Link>
         </div>
       )}
-      {selectedBlogId && <Link to="/actionlogs">Action Logs</Link>}
     </div>
   );
 };
