@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
     const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); // Access context values
@@ -9,6 +10,7 @@ const CreatePost = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,6 +28,7 @@ const CreatePost = () => {
 
             if (response.status === 200) {
                 setSuccess(true);
+                navigate(`/post/${response.data.id}`); // Redirect to the Post Show Page
             }
         } catch (error) {
             setError(error.message);

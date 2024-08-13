@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 const EditPost = () => {
@@ -11,6 +11,7 @@ const EditPost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPostDetails = async () => {
@@ -50,6 +51,7 @@ const EditPost = () => {
 
       if (response.status === 200) {
         setSuccess(true);
+        navigate(`/post/${response.data.id}`); // Redirect to the Post Show Page
       }
     } catch (error) {
       setError(error.message);

@@ -5,7 +5,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken') || null);
   const [selectedBlogId, setSelectedBlogId] = useState(localStorage.getItem('selectedBlogId') || null);
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState(localStorage.getItem('setBlogs') || []);
 
   useEffect(() => {
     if (accessToken) {
