@@ -20,7 +20,7 @@ const ActionLogs = () => {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/actionlogs`, {
           params: { blogId, accessToken }
         });
-        setActionLogs(response.data);
+        setActionLogs(response.data.reverse()); // Reverse the order of the logs
       } catch (error) {
         setError('Error fetching action logs.');
         console.error('Error fetching action logs:', error);
@@ -30,7 +30,21 @@ const ActionLogs = () => {
     };
 
     fetchActionLogs();
-  }, [blogId, accessToken]); // Dependencies
+  }, [blogId, accessToken]); 
+  
+  // Function to format the date
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true
+    });
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -38,7 +52,7 @@ const ActionLogs = () => {
   return (
     <div>
       <h2>Action Logs</h2>
-      <table>
+      <table className="action-logs-table">
         <thead>
           <tr>
             <th>User ID</th>
@@ -56,7 +70,7 @@ const ActionLogs = () => {
                 <td>{log.actionType}</td>
                 <td>{log.blogId || 'N/A'}</td>
                 <td>{log.postId || 'N/A'}</td>
-                <td>{new Date(log.timestamp).toLocaleString()}</td>
+                <td>{formatDate(log.timestamp)}</td>
               </tr>
             ))
           ) : (

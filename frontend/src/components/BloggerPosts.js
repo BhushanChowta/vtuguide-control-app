@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 
-const BloggerPosts = ({ onEdit }) => {
+const BloggerPosts = () => {
     const { blogs, selectedBlogId, setSelectedBlogId, accessToken } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
