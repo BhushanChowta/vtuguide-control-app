@@ -84,6 +84,39 @@ app.get('/api/blogger/posts', async (req, res) => {
   }
 });
 
+app.get('/api/blogger/posts/:postId', async (req, res) => {
+  const { postId } = req.params; // Get postId from URL parameters
+  const { blogId, accessToken } = req.query; // Get blogId and accessToken from query parameters
+
+  try {
+    const response = await axios.get(`https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    res.json(response.data);
+  } catch (error) {
+    // If fails, fallback to fetching drafts
+    try {
+      response = await axios.get(`https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?status=draft`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      });
+
+      // Find the draft post that matches the postId
+      const post = response.data.items.find(p => p.id === postId);
+      if (post) {
+        return res.json(post);
+      } else {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+    } catch (error) {
+      return res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  }
+});
+
 app.get('/api/posts', async (req, res) => {
     try {
         const blogger = google.blogger({

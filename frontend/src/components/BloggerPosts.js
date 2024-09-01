@@ -10,7 +10,7 @@ const BloggerPosts = ({ onEdit }) => {
         const fetchPosts = async () => {
             setLoading(true);
             try {
-                const response = await axios.get('http://localhost:5000/api/posts');
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts`);
                 setPosts(response.data.items);
             } catch (error) {
                 setError(error.message);
@@ -28,7 +28,7 @@ const BloggerPosts = ({ onEdit }) => {
         
         setLoading(true);
         try {
-            await axios.delete(`http://localhost:5000/api/delete-post/${postId}`);
+            await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/delete-post/${postId}`);
             setPosts(posts.filter(post => post.id !== postId));
         } catch (error) {
             setError(error.message);

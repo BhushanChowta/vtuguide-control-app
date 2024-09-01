@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-const CreatePost = ({ blogId, accessToken }) => {
+const CreatePost = () => {
+    const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); // Access context values
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,7 +19,7 @@ const CreatePost = ({ blogId, accessToken }) => {
         setSuccess(false);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/create-post', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/create-post`, {
                 blogId,
                 title,
                 content,
@@ -24,6 +28,7 @@ const CreatePost = ({ blogId, accessToken }) => {
 
             if (response.status === 200) {
                 setSuccess(true);
+                navigate(`/post/${response.data.id}`); // Redirect to the Post Show Page
             }
         } catch (error) {
             setError(error.message);
