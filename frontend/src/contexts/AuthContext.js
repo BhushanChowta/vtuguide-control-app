@@ -2,14 +2,36 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
 
+const EXPIRATION_TIME = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+
 export const AuthProvider = ({ children }) => {
-  const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken') || null);
-  const [selectedBlogId, setSelectedBlogId] = useState(localStorage.getItem('selectedBlogId') || null);
-  const [blogs, setBlogs] = useState(localStorage.getItem('setBlogs') || []);
+  const getItemWithExpiry = (key) => {
+    const item = JSON.parse(localStorage.getItem(key));
+    if (!item) return null;
+    const now = new Date();
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return item.value;
+  };
+
+  const setItemWithExpiry = (key, value) => {
+    const now = new Date();
+    const item = {
+      value: value,
+      expiry: now.getTime() + EXPIRATION_TIME,
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+  };
+
+  const [accessToken, setAccessToken] = useState(getItemWithExpiry('accessToken'));
+  const [selectedBlogId, setSelectedBlogId] = useState(getItemWithExpiry('selectedBlogId'));
+  const [blogs, setBlogs] = useState(getItemWithExpiry('blogs') || []);
 
   useEffect(() => {
     if (accessToken) {
-      localStorage.setItem('accessToken', accessToken);
+      setItemWithExpiry('accessToken', accessToken);
     } else {
       localStorage.removeItem('accessToken');
     }
@@ -17,11 +39,19 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (selectedBlogId) {
-      localStorage.setItem('selectedBlogId', selectedBlogId);
+      setItemWithExpiry('selectedBlogId', selectedBlogId);
     } else {
       localStorage.removeItem('selectedBlogId');
     }
   }, [selectedBlogId]);
+
+  useEffect(() => {
+    if (blogs.length > 0) {
+      setItemWithExpiry('blogs', blogs);
+    } else {
+      localStorage.removeItem('blogs');
+    }
+  }, [blogs]);
 
   return (
     <AuthContext.Provider value={{

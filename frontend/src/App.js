@@ -3,6 +3,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import GoogleProvider from './components/GoogleProvider';
 import GoogleLoginComponent from './components/GoogleLoginComponent';
 import { AuthContext } from './contexts/AuthContext';
+import './style.css'; // Import custom CSS for styling
 
 const App = () => {
   const { accessToken } = useContext(AuthContext);
