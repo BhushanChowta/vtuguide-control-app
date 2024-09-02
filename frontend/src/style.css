@@ -124,3 +124,13 @@ h1 {
       text-decoration: none;
       color: inherit;
   }
+
+  /*analytics-Component */
+.analyComp-container {
+    padding: 20px;
+}
+.analyComp-chart {
+  display: flex;
+  justify-content: center; /* Horizontally centers the chart */
+  align-items: center; /* Vertically centers the chart if it is smaller than the container */
+}

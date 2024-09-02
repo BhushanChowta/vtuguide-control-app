@@ -109,10 +109,10 @@ const AnalyticsComponent = () => {
   ];
 
   return (
-    <div>
+    <div className='analyComp-container'>
       <h2>Analytics Data</h2>
       {analyticsData.length > 0 ? (
-        <Chart options={chartOptions} series={chartSeries} type="bar" height={350} width={1450} />
+        <Chart className='analyComp-chart' options={chartOptions} series={chartSeries} type="bar" height={350} width={1450} />
       ) : (
         <p>Loading...</p>
       )}
