@@ -65,4 +65,62 @@ h1 {
       font-size: 14px;
     }
   }
-  
+
+  /*blogger-posts-container */
+  .blogger-posts-container {
+      padding: 20px;
+  }
+
+  .post-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 columns */
+      gap: 20px; /* Space between the cards */
+  }
+
+  .post-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+  }
+
+  .post-card.draft {
+      border-color: #ff9800;
+  }
+
+  .draft-label {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff9800;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 4px;
+  }
+
+  .post-image img {
+      width: 100%;
+      height: auto;
+  }
+
+  .post-content {
+      padding: 15px;
+  }
+
+  .post-content h3 {
+      margin: 0;
+      font-size: 18px;
+      margin-bottom: 10px;
+  }
+
+  .post-content p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+  }
+
+  .post-link {
+      text-decoration: none;
+      color: inherit;
+  }
