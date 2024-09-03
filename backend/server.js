@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const { google } = require('googleapis');
 const logAction = require('./utils/logAction');
 const ActionLog = require('./models/ActionLog'); 
-const productController = require('./controllers/PostController')
+const productRouter = require('./routes/product')
+
 require('dotenv').config();
 const cors = require('cors');
 
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors()); // Enable CORS
 app.use(bodyParser.json());
+app.use('/api',productRouter.routes);
 
 const blogger = google.blogger('v3');
 
@@ -137,15 +139,6 @@ const getUserActionLogs =  async (req, res) => {
   }
 }
 
-//C R U D POSTS
-
-app.get('/api/posts',productController.getPosts);
-
-app.post('/api/create-post',productController.createPost);
-
-app.put('/api/edit-post/:postId',productController.editPost);
-
-app.delete('/api/delete-post/:postId',productController.deletePost);
 
 //User Action Logs
 
