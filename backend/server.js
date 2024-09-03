@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const { google } = require('googleapis');
 const logAction = require('./utils/logAction');
 const ActionLog = require('./models/ActionLog'); 
+const productController = require('./controllers/PostController')
 require('dotenv').config();
 const cors = require('cors');
 
@@ -117,104 +118,7 @@ app.get('/api/blogger/posts/:postId', async (req, res) => {
   }
 });
 
-app.get('/api/posts', async (req, res) => {
-    try {
-        const blogger = google.blogger({
-            version: 'v3',
-            auth: oauth2Client,
-        });
-
-        const response = await blogger.posts.list({
-            blogId: process.env.BLOG_ID,
-        });
-
-        res.status(200).json(response.data);
-    } catch (error) {
-        console.error('Error fetching posts:', error.response ? error.response.data : error.message); 
-        res.status(500).json({ error: error.response ? error.response.data : error.message });
-    }
-});
-
-app.post('/api/create-post', async (req, res) => {
-    const { blogId, title, content, accessToken } = req.body;
-    const userId = await fetchGoogleUserId(accessToken);
-
-    try {
-        const oauth2Client = new google.auth.OAuth2();
-        oauth2Client.setCredentials({ access_token: accessToken });
-    
-        const response = await blogger.posts.insert({
-          auth: oauth2Client,
-          blogId: blogId,
-          requestBody: {
-            title: title,
-            content: content,
-          },
-          isDraft: true, // Set the post to be a draft
-        });
-
-        logAction(userId, 'CREATE_POST', blogId, response.data.id);
-
-        res.status(200).json(response.data);
-      } catch (error) {
-        res.status(error.response?.status || 500).json({ error: error.message });
-    }
-});
-
-app.put('/api/edit-post/:postId', async (req, res) => {
-  const { postId } = req.params;
-  const { title, content, accessToken, blogId } = req.body;
-  const userId = await fetchGoogleUserId(accessToken);
-
-  try {
-    const oauth2Client = new google.auth.OAuth2();
-    oauth2Client.setCredentials({ access_token: accessToken });
-
-    const response = await blogger.posts.update({
-      auth: oauth2Client,
-      blogId: blogId,
-      postId: postId,
-      requestBody: {
-        title: title,
-        content: content,
-      },
-    });
-
-    logAction(userId, 'EDIT_POST', blogId, postId);
-
-    res.status(200).json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({ error: error.message });
-  }
-});
-
-app.delete('/api/delete-post/:postId', async (req, res) => {
-    const { postId } = req.params;
-    const { accessToken, blogId } = req.body;
-    const userId = await fetchGoogleUserId(accessToken);
-
-    try {
-        const oauth2Client = new google.auth.OAuth2();
-        oauth2Client.setCredentials({ access_token: accessToken });
-
-        const response = await blogger.posts.delete({
-          auth: oauth2Client,
-          blogId: blogId,
-          postId: postId,
-        });
-        // res.status(200).json(response.data);
-
-        logAction(userId, 'DELETE_POST', blogId, postId);
-
-        res.status(200).json({ message: `${postId} Post deleted successfully` });
-    } catch (error) {
-        console.error('Error deleting post:', error.response ? error.response.data : error.message); // Log the error details
-        res.status(500).json({ error: error.response ? error.response.data : error.message });
-    }
-});
-
-
-app.get('/api/actionlogs', async (req, res) => {
+const getUserActionLogs =  async (req, res) => {
   try {
     const { blogId,accessToken } = req.query; // Get the blogId from query parameters
     const userId = await fetchGoogleUserId(accessToken);
@@ -231,7 +135,21 @@ app.get('/api/actionlogs', async (req, res) => {
     console.error('Error fetching action logs:', error);
     res.status(500).json({ error: 'Failed to fetch action logs' });
   }
-});
+}
+
+//C R U D POSTS
+
+app.get('/api/posts',productController.getPosts);
+
+app.post('/api/create-post',productController.createPost);
+
+app.put('/api/edit-post/:postId',productController.editPost);
+
+app.delete('/api/delete-post/:postId',productController.deletePost);
+
+//User Action Logs
+
+app.get('/api/actionlogs', getUserActionLogs);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
