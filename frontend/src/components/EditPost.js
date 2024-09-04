@@ -17,7 +17,7 @@ const EditPost = () => {
     const fetchPostDetails = async () => {
       if (postId) {
         try {
-          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blogger/posts/${postId}`, {
+          const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${postId}`, {
             params: {
               blogId,
               accessToken,
