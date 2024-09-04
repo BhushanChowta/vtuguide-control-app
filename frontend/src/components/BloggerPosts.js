@@ -13,7 +13,7 @@ const BloggerPosts = () => {
         const fetchBlogPosts = async () => {
             try {
                 setLoading(true);
-              const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/blogger/posts`, {
+              const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts`, {
                 params: {
                     blogId: selectedBlogId, 
                     accessToken,
