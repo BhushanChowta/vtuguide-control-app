@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const { google } = require('googleapis');
 const logAction = require('./utils/logAction');
 const ActionLog = require('./models/ActionLog'); 
-const productRouter = require('./routes/product')
+const postRouter = require('./routes/post')
 
 require('dotenv').config();
 const cors = require('cors');
@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors()); // Enable CORS
 app.use(bodyParser.json());
-app.use('/api',productRouter.routes);
+app.use('/api',postRouter.routes);
 
 const blogger = google.blogger('v3');
 
