@@ -4,13 +4,12 @@ import Chart from 'react-apexcharts';
 import { AuthContext } from '../contexts/AuthContext';
 
 const AnalyticsComponent = () => {
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken, analyPropertyId } = useContext(AuthContext);
   const [analyticsData, setAnalyticsData] = useState([]);
-  const propertyId = process.env.REACT_APP_PROPERTY_ID;
   const apiKey = process.env.REACT_APP_API_KEY;
 
   const fetchAnalyticsReports = async () => {
-    if (!accessToken || !propertyId || !apiKey) {
+    if (!accessToken || !analyPropertyId || !apiKey) {
       console.error('Missing access token, property ID, or API key');
       return;
     }
@@ -46,7 +45,7 @@ const AnalyticsComponent = () => {
 
     try {
       const response = await axios.post(
-        `https://analyticsdata.googleapis.com/v1beta/properties/${propertyId}:batchRunReports?key=${apiKey}`,
+        `https://analyticsdata.googleapis.com/v1beta/properties/${analyPropertyId}:batchRunReports?key=${apiKey}`,
         requestData,
         {
           headers: {

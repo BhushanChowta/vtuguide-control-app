@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(getItemWithExpiry('accessToken'));
   const [selectedBlogId, setSelectedBlogId] = useState(getItemWithExpiry('selectedBlogId'));
   const [blogs, setBlogs] = useState(getItemWithExpiry('blogs') || []);
+  const [analyPropertyId, setAnalyPropertyId] = useState(getItemWithExpiry('analyPropertyId'));
 
   useEffect(() => {
     if (accessToken) {
@@ -53,6 +54,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, [blogs]);
 
+  useEffect(() => {
+    if (analyPropertyId) {
+      setItemWithExpiry('analyPropertyId', analyPropertyId);
+    } else {
+      localStorage.removeItem('analyPropertyId');
+    }
+  }, [analyPropertyId]);
+
   return (
     <AuthContext.Provider value={{
       accessToken,
@@ -60,7 +69,9 @@ export const AuthProvider = ({ children }) => {
       selectedBlogId,
       setSelectedBlogId,
       blogs,
-      setBlogs
+      setBlogs,
+      analyPropertyId,
+      setAnalyPropertyId
     }}>
       {children}
     </AuthContext.Provider>
