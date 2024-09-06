@@ -10,7 +10,12 @@
 ### Dashboard Page
 ![Dashboard Page](./frontend/public/assets/dashboard.PNG)
 
-### UserActions Page
+### CRUD Pages
+![Create Page](./frontend/public/assets/createPost.PNG)
+![Read Page](./frontend/public/assets/showPost.PNG)
+![Update Page](./frontend/public/assets/editPost.PNG)
+
+### UserActions Log Page
 ![UserActions Page](./frontend/public/assets/actionlogs.PNG)
 
-### CRUD Pages
+
