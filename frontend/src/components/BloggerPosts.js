@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { Box, Grid, Typography } from '@mui/material'; // Import Material-UI components
 
 const BloggerPosts = () => {
-    const { blogs, selectedBlogId, setSelectedBlogId, accessToken } = useContext(AuthContext);
+    const { blogs, selectedBlogId, accessToken, setBlogs, setSelectedBlogId, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBlogPosts = async () => {
@@ -28,8 +29,17 @@ const BloggerPosts = () => {
               }));
               setPosts(postsWithImages);
             } catch (error) {
-                setError(error.message);
-                console.error('Error fetching blog posts:', error);
+                if (error.response && error.response.status === 401) {
+                    console.error('Unauthorized. Signing out...');
+                    setBlogs([]);
+                    setSelectedBlogId(null);
+                    setAccessToken(null);
+                    setAnalyPropertyId(null);
+                    navigate('/'); 
+                } else {
+                    setError(error.message);
+                    console.error('Error fetching blog posts:', error);
+                }
             } finally {
                 setLoading(false);
             }
@@ -81,8 +91,8 @@ const BloggerPosts = () => {
                         {post.imageUrl && (
                         <img src={post.imageUrl} alt={post.title} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
                         )}
-                        <Typography variant="h6" gutterBottom sx={{ mt: 1, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}> 
-                                        {post.title}
+                        <Typography variant="h6" gutterBottom sx={{ mt: 1, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                            {post.title}
                         </Typography>
                     </Link>
                     {post.status === 'DRAFT' && (
