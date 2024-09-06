@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { AuthContext } from '../contexts/AuthContext';
+import { Typography, Box } from '@mui/material'; 
 
 const AnalyticsComponent = () => {
   const { accessToken, analyPropertyId } = useContext(AuthContext);
@@ -108,14 +109,22 @@ const AnalyticsComponent = () => {
   ];
 
   return (
-    <div className='analyComp-container'>
-      <h2>Analytics Data</h2>
+    <Box sx={{ p: 2 }}> {/* Add padding here */}
+      <Typography variant="h4" gutterBottom> 
+        Analytics Data
+      </Typography>
       {analyticsData.length > 0 ? (
-        <Chart className='analyComp-chart' options={chartOptions} series={chartSeries} type="bar" height={350} width={1450} />
+        <Chart 
+          options={chartOptions} 
+          series={chartSeries} 
+          type="bar" 
+          height={350} 
+          width="100%" // Make chart responsive
+        />
       ) : (
-        <p>Loading...</p>
+        <Typography variant="body1">Loading...</Typography> 
       )}
-    </div>
+    </Box>
   );
 };
 
