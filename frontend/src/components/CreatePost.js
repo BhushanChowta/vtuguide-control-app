@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header'; 
 
 const CreatePost = () => {
     const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); // Access context values
@@ -39,6 +40,7 @@ const CreatePost = () => {
 
     return (
         <div>
+            <Header /> 
             <h1>Create New Post</h1>
             <form onSubmit={handleSubmit}>
                 <div>

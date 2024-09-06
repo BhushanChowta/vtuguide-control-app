@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AnalyticsComponent from '../components/AnalyticsComponent';
 import BloggerPosts from '../components/BloggerPosts';
 import { AuthContext } from '../contexts/AuthContext';
+import Header from '../components/Header'; // Import the Header component
 import { List, ListItem, ListItemText, Typography, Button } from '@mui/material'; // Import Material-UI components
 
 const Dashboard = () => {
@@ -24,6 +25,8 @@ const Dashboard = () => {
 
   return (
     <div>
+      <Header />
+
       {!selectedBlogId && accessToken && (
         <div>
           <Typography variant="h5" gutterBottom>
@@ -42,21 +45,9 @@ const Dashboard = () => {
           )}
         </div>
       )}
-
+      
       {selectedBlogId && (
         <div>
-          <Button component={Link} to="/dashboard" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
-            Dashboard
-          </Button>
-          <Button component={Link} to="/actionlogs" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
-            Action Logs
-          </Button>
-          <Button component={Link} to="/create-post" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
-            Create New Post
-          </Button>
-          <Button onClick={handleSignOut} variant="outlined" size="small" color="secondary">
-            Sign Out
-          </Button>
           <AnalyticsComponent />
           <BloggerPosts />
         </div>

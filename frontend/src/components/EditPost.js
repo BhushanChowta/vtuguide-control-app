@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import Header from './Header'; 
 
 const EditPost = () => {
   const { postId } = useParams(); // Get postId from route parameters
@@ -62,6 +63,7 @@ const EditPost = () => {
 
   return (
     <div>
+      <Header/>
       <h1>Edit Post</h1>
       <form onSubmit={handleSubmit}>
         <div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import Header from '../components/Header'; // Import the Header component
 
 const ActionLogs = () => {
   const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); // Access context values
@@ -31,7 +32,7 @@ const ActionLogs = () => {
 
     fetchActionLogs();
   }, [blogId, accessToken]); 
-  
+
   // Function to format the date
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -46,40 +47,42 @@ const ActionLogs = () => {
     });
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
     <div>
+      <Header /> {/* Header is now always displayed */}
+
       <h2>Action Logs</h2>
-      <table className="action-logs-table">
-        <thead>
-          <tr>
-            <th>User ID</th>
-            <th>Action Type</th>
-            <th>Blog ID</th>
-            <th>Post ID</th>
-            <th>Timestamp</th>
-          </tr>
-        </thead>
-        <tbody>
-          {actionLogs.length > 0 ? (
-            actionLogs.map((log, index) => (
-              <tr key={index}>
-                <td>{log.userId}</td>
-                <td>{log.actionType}</td>
-                <td>{log.blogId || 'N/A'}</td>
-                <td>{log.postId || 'N/A'}</td>
-                <td>{formatDate(log.timestamp)}</td>
-              </tr>
-            ))
-          ) : (
+
+      {/* Conditionally render content based on loading and error states */}
+      {loading && <p>Loading...</p>} 
+      {error && <p>{error}</p>}
+      {!loading && !error && actionLogs.length === 0 && <p>No action logs found.</p>}
+
+      {/* Display the table only when not loading and there are action logs */}
+      {!loading && !error && actionLogs.length > 0 && ( 
+        <table className="action-logs-table">
+          <thead>
             <tr>
-              <td colSpan="5">No action logs found.</td>
+              <th>User ID</th>
+              <th>Action Type</th>
+              <th>Blog ID</th>
+              <th>Post ID</th>
+              <th>Timestamp</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+              {actionLogs.map((log, index) => (
+                <tr key={index}>
+                  <td>{log.userId}</td>
+                  <td>{log.actionType}</td>
+                  <td>{log.blogId || 'N/A'}</td>
+                  <td>{log.postId || 'N/A'}</td>
+                  <td>{formatDate(log.timestamp)}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

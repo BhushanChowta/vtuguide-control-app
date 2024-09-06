@@ -2,16 +2,20 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import Header from '../components/Header'; // Assuming you have a Header component
 
 const PostShow = () => {
   const { postId } = useParams();
   const { selectedBlogId, accessToken, blogs } = useContext(AuthContext);
   const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [error, setError] = useState(null); // Add error state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPostShows = async () => {
       try {
+        setLoading(true); // Set loading to true before fetching
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${postId}`, {
           params: {
             blogId: selectedBlogId,
@@ -21,6 +25,9 @@ const PostShow = () => {
         setPost(response.data);
       } catch (error) {
         console.error('Error fetching post details:', error);
+        setError(error.message); // Set error message if fetching fails
+      } finally {
+        setLoading(false); // Set loading to false after fetching, regardless of success or failure
       }
     };
 
@@ -48,16 +55,26 @@ const PostShow = () => {
     }
   };
 
-  if (!post) {
-    return <p>Loading post details...</p>;
-  }
-
   return (
     <div>
-      <h2>{post.title}</h2>
-      <h4>{post.status === 'DRAFT' && <button onClick={() => handleDeletePost(post.id, post.title)}>Delete</button>}</h4>
-      <h4><Link to={`/edit-post/${post.id}`}>Edit</Link></h4>
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <Header /> {/* Display the Header component */}
+
+      {loading && <p>Loading post details...</p>}
+      {error && <p>Error: {error}</p>}
+      {post && ( 
+        <div>
+          <h2>{post.title}</h2>
+          <h4>
+            {post.status === 'DRAFT' && (
+              <button onClick={() => handleDeletePost(post.id, post.title)}>
+                Delete
+              </button>
+            )}
+          </h4>
+          <h4><Link to={`/edit-post/${post.id}`}>Edit</Link></h4>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        </div>
+      )}
     </div>
   );
 };
