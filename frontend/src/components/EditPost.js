@@ -2,10 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import Header from './Header'; 
+import Header from './Header';
+import { Typography, TextField, Button, Container, Box } from '@mui/material'; // Import Material-UI components
 
 const EditPost = () => {
-  const { postId } = useParams(); // Get postId from route parameters
+  const { postId } = useParams();
   const { selectedBlogId: blogId, accessToken } = useContext(AuthContext);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -52,7 +53,7 @@ const EditPost = () => {
 
       if (response.status === 200) {
         setSuccess(true);
-        navigate(`/post/${response.data.id}`); // Redirect to the Post Show Page
+        navigate(`/post/${response.data.id}`);
       }
     } catch (error) {
       setError(error.message);
@@ -63,32 +64,60 @@ const EditPost = () => {
 
   return (
     <div>
-      <Header/>
-      <h1>Edit Post</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Content</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-          ></textarea>
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Updating...' : 'Update Post'}
-        </button>
-      </form>
-      {error && <p>Error: {error}</p>}
-      {success && <p>Post updated successfully!</p>}
+    <Header />
+    <Container maxWidth="md">
+      <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}> 
+        <Typography variant="h4" gutterBottom>
+          Edit Post
+        </Typography>
+
+        <form onSubmit={handleSubmit}>
+          <div>
+            <TextField 
+              label="Title"
+              variant="outlined"
+              fullWidth
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              margin="normal" 
+            />
+          </div>
+          <div>
+            <TextField 
+              label="Content"
+              multiline
+              rows={10} 
+              variant="outlined"
+              fullWidth
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              required
+              margin="normal" 
+            />
+          </div>
+          <Button 
+            type="submit" 
+            disabled={loading} 
+            variant="contained" 
+            color="primary"
+          >
+            {loading ? 'Updating...' : 'Update Post'}
+          </Button>
+        </form>
+
+        {error && (
+          <Typography variant="body1" color="error" sx={{ mt: 2 }}>
+            Error: {error}
+          </Typography>
+        )}
+        {success && (
+          <Typography variant="body1" color="success" sx={{ mt: 2 }}>
+            Post updated successfully!
+          </Typography>
+        )}
+      </Box>
+    </Container>
     </div>
   );
 };
