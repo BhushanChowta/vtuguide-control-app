@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AnalyticsComponent from '../components/AnalyticsComponent';
 import BloggerPosts from '../components/BloggerPosts';
 import { AuthContext } from '../contexts/AuthContext';
+import { List, ListItem, ListItemText, Typography, Button } from '@mui/material'; // Import Material-UI components
 
 const Dashboard = () => {
   const { blogs, setBlogs, selectedBlogId, setSelectedBlogId, accessToken, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
@@ -14,12 +15,10 @@ const Dashboard = () => {
 
   // Sign-out function
   const handleSignOut = () => {
-    setBlogs([]); // Clear the blogs
+    setBlogs([]);
     setSelectedBlogId(null);
-    setAccessToken(null); // Clear the access token
-    setAnalyPropertyId(null); // Clear the Analytics property ID
-
-    // Redirect to the home page
+    setAccessToken(null);
+    setAnalyPropertyId(null);
     navigate('/');
   };
 
@@ -27,30 +26,41 @@ const Dashboard = () => {
     <div>
       {!selectedBlogId && accessToken && (
         <div>
-          <h2>Blogs:</h2>
+          <Typography variant="h5" gutterBottom>
+            Select a Blog:
+          </Typography>
           {blogs.length > 0 ? (
-            <ul>
+            <List>
               {blogs.map((blog) => (
-                <li key={blog.id} onClick={() => handleBlogSelect(blog.id)}>
-                  {blog.name}
-                </li>
+                <ListItem button key={blog.id} onClick={() => handleBlogSelect(blog.id)}>
+                  <ListItemText primary={blog.name} />
+                </ListItem>
               ))}
-            </ul>
+            </List>
           ) : (
-            <p>No blogs found.</p>
+            <Typography variant="body1">No blogs found.</Typography>
           )}
         </div>
       )}
-      {selectedBlogId && <Link to="/actionlogs">Action Logs</Link>}
-      {selectedBlogId && <>||</>}
-      {selectedBlogId && <Link to="/create-post">Create New Post</Link>}
-      {selectedBlogId &&  
-        <button onClick={handleSignOut}>
-          Sign Out
-        </button>
-      }
-      {selectedBlogId && <AnalyticsComponent />}
-      {selectedBlogId && <BloggerPosts />}
+
+      {selectedBlogId && (
+        <div>
+          <Button component={Link} to="/dashboard" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
+            Dashboard
+          </Button>
+          <Button component={Link} to="/actionlogs" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
+            Action Logs
+          </Button>
+          <Button component={Link} to="/create-post" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
+            Create New Post
+          </Button>
+          <Button onClick={handleSignOut} variant="outlined" size="small" color="secondary">
+            Sign Out
+          </Button>
+          <AnalyticsComponent />
+          <BloggerPosts />
+        </div>
+      )}
     </div>
   );
 };

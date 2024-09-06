@@ -4,9 +4,10 @@ import GoogleProvider from './components/GoogleProvider';
 import GoogleLoginComponent from './components/GoogleLoginComponent';
 import { AuthContext } from './contexts/AuthContext';
 import './style.css'; // Import custom CSS for styling
+import { Button, CssBaseline } from '@mui/material'; // Import Material-UI components
 
 const App = () => {
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken, selectedBlogId } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Redirect to /dashboard if the user is authenticated and visits the root /
@@ -19,14 +20,18 @@ const App = () => {
   return (
     <GoogleProvider>
       <div className="App">
+        <CssBaseline /> 
         {!accessToken &&
           <GoogleLoginComponent />
         }
-        {accessToken && (
-          <nav>
-            <Link to="/dashboard">Dashboard</Link>
-          </nav>
+        {accessToken && !selectedBlogId && (
+          <div>
+            <Button component={Link} to="/dashboard" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
+              Dashboard
+            </Button>
+          </div>
         )}
+        <br></br>
       </div>
       <Outlet />
     </GoogleProvider>
