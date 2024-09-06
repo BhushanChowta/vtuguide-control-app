@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import { Box, Grid, Typography } from '@mui/material'; // Import Material-UI components
 
 const BloggerPosts = () => {
     const { blogs, selectedBlogId, setSelectedBlogId, accessToken } = useContext(AuthContext);
@@ -52,36 +53,48 @@ const BloggerPosts = () => {
     };
 
     return (
-        <div className="blogger-posts-container">
-            <h2>Recent Blogger Posts</h2>
-            {posts.length > 0 ? (
-                <ul>
-                    <div className="post-cards">
-                        {posts.map((post) => (
-                            <div key={post.id} className={`post-card ${post.status === 'DRAFT' ? 'draft' : ''}`}>
-                                {post.status === 'DRAFT' && <span className="draft-label">Draft</span>}
-                                <Link to={`/post/${post.id}`} className="post-link">
-                                    {post.imageUrl && (
-                                        <div className="post-image">
-                                            <img src={post.imageUrl} alt={post.title} />
-                                        </div>
-                                    )}
-                                    <div className="post-content">
-                                        <h3>{post.title}</h3>
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-                </ul>
-            ) : (
+        <Box sx={{ p: 2 }}>
+            <Typography variant="h4" gutterBottom>
+                Recent Blogger Posts
+            </Typography>
+            {posts.length === 0 && ( 
                 <>
-                    {error && <p>Error: {error}</p>}
-                    {loading && <p>Loading...</p>}
-                    {!loading && <p>No posts found.</p>}
+                    {error && <Typography variant="body1">Error: {error}</Typography>}
+                    {loading && <Typography variant="body1">Loading...</Typography>}
+                    {!loading && !error && <Typography variant="body1">No Post Found</Typography>} 
                 </>
             )}
-        </div>
+            <Grid container spacing={2}> 
+                {posts.map((post) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={post.id}> {/* Responsive grid items */}
+                    <Box
+                    sx={{
+                        border: `1px solid ${post.status === 'DRAFT' ? 'orange' : '#ccc'}`, // Conditional border color
+                        borderRadius: '4px',
+                        p: 2,
+                        '&:hover': {
+                        boxShadow: 3, // Add a box shadow on hover
+                        },
+                    }}
+                    >
+                    <Link to={`/post/${post.id}`} style={{ textDecoration: 'none' }}>
+                        {post.imageUrl && (
+                        <img src={post.imageUrl} alt={post.title} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
+                        )}
+                        <Typography variant="h6" gutterBottom sx={{ mt: 1, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}> 
+                                        {post.title}
+                        </Typography>
+                    </Link>
+                    {post.status === 'DRAFT' && (
+                        <Typography variant="caption" color="textSecondary">
+                        Draft
+                        </Typography>
+                    )}
+                    </Box>
+                </Grid>
+                ))}
+            </Grid>
+        </Box>
     );
 };
 
