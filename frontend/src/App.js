@@ -31,7 +31,6 @@ const App = () => {
             </Button>
           </div>
         )}
-        <br></br>
       </div>
       <Outlet />
     </GoogleProvider>
