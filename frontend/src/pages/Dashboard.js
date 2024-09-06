@@ -4,7 +4,7 @@ import AnalyticsComponent from '../components/AnalyticsComponent';
 import BloggerPosts from '../components/BloggerPosts';
 import { AuthContext } from '../contexts/AuthContext';
 import Header from '../components/Header'; // Import the Header component
-import { List, ListItem, ListItemText, Typography, Box, Paper, CircularProgress } from '@mui/material'; 
+import { List, Button, Typography, Box, Paper, CircularProgress } from '@mui/material'; 
 
 const Dashboard = () => {
   const { blogs, setBlogs, selectedBlogId, setSelectedBlogId, accessToken, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
@@ -41,18 +41,15 @@ const Dashboard = () => {
               blogs.length > 0 ? (
                 <List>
                   {blogs.map((blog) => (
-                    <ListItem 
-                      button 
-                      key={blog.id} 
-                      onClick={() => handleBlogSelect(blog.id)}
-                      sx={{
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.1)'
-                        }
-                      }}
-                    >
-                      <ListItemText primary={blog.name} />
-                    </ListItem>
+                  <Button variant="contained"
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)'
+                      }
+                    }}
+                   onClick={() => handleBlogSelect(blog.id)}>
+                    {blog.name}
+                  </Button>
                   ))}
                 </List>
               ) : (

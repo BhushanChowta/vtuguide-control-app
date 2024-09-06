@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
-import { Box, Grid, Typography } from '@mui/material'; // Import Material-UI components
+import { Box, Grid, Typography } from '@mui/material'; 
 
 const BloggerPosts = () => {
     const { blogs, selectedBlogId, accessToken, setBlogs, setSelectedBlogId, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
@@ -91,8 +91,8 @@ const BloggerPosts = () => {
                         {post.imageUrl && (
                         <img src={post.imageUrl} alt={post.title} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
                         )}
-                        <Typography variant="h6" gutterBottom sx={{ mt: 1, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                            {post.title}
+                        <Typography variant="h6" sx={{ mt: 1, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }} gutterBottom >
+                            {post.title}    
                         </Typography>
                     </Link>
                     {post.status === 'DRAFT' && (
