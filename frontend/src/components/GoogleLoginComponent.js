@@ -2,18 +2,19 @@ import React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext'; // Adjust the path as necessary
+import { AuthContext } from '../contexts/AuthContext'; 
+import { Button } from '@mui/material';
 
 const GoogleLoginComponent = () => {
-  const { setBlogs, setAccessToken, setAnalyPropertyId  } = useContext(AuthContext);
+  const { setBlogs, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
 
   const login = useGoogleLogin({
     scope: 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/blogger',
     onSuccess: async (tokenResponse) => {
       console.log("tokenResponse", tokenResponse);
       const accessToken = tokenResponse.access_token;
-      setAccessToken(accessToken); // Set the access token here
-      await fetchPropertyId(accessToken); // Fetch property IDs
+      setAccessToken(accessToken); 
+      await fetchPropertyId(accessToken); 
       await fetchBloggerData(accessToken);
     },
     onError: (error) => {
@@ -39,20 +40,17 @@ const GoogleLoginComponent = () => {
         throw new Error('No account summaries found.');
       }
 
-      // Extract and sort property IDs
       const propertyIds = accountSummaries.flatMap(account => 
         account.propertySummaries.map(property => ({
-          id: property.property.split('/').pop(), // Extract property ID
-          createTime: new Date(property.createTime), // Sort by creation time
+          id: property.property.split('/').pop(), 
+          createTime: new Date(property.createTime),
         }))
       );
 
-      propertyIds.sort((a, b) => a.createTime - b.createTime); // Sort by creation time
+      propertyIds.sort((a, b) => a.createTime - b.createTime); 
 
       if (propertyIds.length > 0) {
-        // console.log('propertyIds data:', propertyIds[0]);
-
-        setAnalyPropertyId(propertyIds[0].id); // Set the first property ID
+        setAnalyPropertyId(propertyIds[0].id); 
       } else {
         throw new Error('No properties found.');
       }
@@ -74,12 +72,16 @@ const GoogleLoginComponent = () => {
   };
 
   return (
-    <>
-      <h1>Google Login</h1>
-      <button onClick={() => login()}>
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh' 
+    }}>
+      <Button variant="contained" onClick={() => login()}>
         Login with Google
-      </button>
-    </>
+      </Button>
+    </div>
   );
 };
 
