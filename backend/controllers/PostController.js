@@ -2,6 +2,7 @@ const axios = require('axios');
 const { google } = require('googleapis');
 const blogger = google.blogger('v3');
 const logAction = require('../utils/logAction');
+const Post = require('../models/Post'); // Import your Post model
 
 
 exports.createPost = async (req, res) => {
@@ -128,9 +129,39 @@ exports.deletePost = async (req, res) => {
         console.error('Error deleting post:', error.response ? error.response.data : error.message); // Log the error details
         res.status(500).json({ error: error.response ? error.response.data : error.message });
     }
-  } 
+  }
 
-  
+exports.contributePost = async (req, res) => {
+  try {
+    const { blogId, title, content } = req.body;
+
+    // 1. Validate form data (you can use a validation library like Joi)
+    if (!blogId || !title || !content) {
+      return res.status(400).json({ error: 'Missing required fields.' });
+    }
+
+    // 2. Create a new post document
+    const newPost = new Post({
+      blogId,
+      title,
+      content,
+    });
+
+    // 3. Save the post to the database
+    const savedPost = await newPost.save();
+
+    // 4. Send a success response
+    res.status(200).json({ 
+      message: 'Post submitted successfully!', 
+      postId: savedPost._id 
+    });
+
+  } catch (error) {
+    console.error('Error submitting post:', error);
+    res.status(500).json({ message: 'An error occurred during submission.' });
+  }
+};
+
 const fetchGoogleUserId = async (accessToken) => {
     try {
       const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {

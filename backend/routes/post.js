@@ -8,6 +8,7 @@ routes
 .get('/posts/:postId',PostController.getPost)
 .post('/create-post',PostController.createPost)
 .put('/edit-post/:postId',PostController.editPost)
-.delete('/delete-post/:postId',PostController.deletePost);
+.delete('/delete-post/:postId',PostController.deletePost)
+.post('/contribute-post',PostController.contributePost);
 
 exports.routes=routes;

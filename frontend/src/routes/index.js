@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import CreatePost from '../components/CreatePost';
 import EditPost from '../components/EditPost';
+import PublicBlogSubmission from '../components/PublicBlogSubmission';
 import ActionLogs from '../pages/ActionLogs';
 import PostShow from '../pages/PostShow';
 import Dashboard from '../pages/Dashboard';
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
                 element: <ActionLogs />,
             },
         ]
-    }
+    },
+    {
+        path: "contribute/:blogId",
+        element: <PublicBlogSubmission />,
+    },
 ]);
 
 export default router;
