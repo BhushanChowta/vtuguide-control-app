@@ -1,13 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
-import Header from '../components/Header'; // Import the Header component
+import Header from '../components/Header'; 
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const ActionLogs = () => {
-  const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); // Access context values
+  const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); 
   const [actionLogs, setActionLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const itemsPerPage = 10; 
 
   useEffect(() => {
     const fetchActionLogs = async () => {
@@ -33,6 +39,7 @@ const ActionLogs = () => {
     fetchActionLogs();
   }, [blogId, accessToken]); 
 
+  // Function to format the date (You can keep your existing formatDate function)
   // Function to format the date
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -46,43 +53,87 @@ const ActionLogs = () => {
       hour12: true
     });
   };
+  
+  // Create a mapping of action types
+  const actionTypeMapping = {
+    'CREATE_POST': <><AddCircleOutlineIcon /> &nbsp; Created Post</>,
+    'DELETE_POST': <><DeleteIcon /> &nbsp; Deleted Post</>, 
+    'EDIT_POST': <><EditIcon /> &nbsp; Edited Post</>,
+  };
+
+  // Calculate pagination values
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentLogs = actionLogs.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Handle page change
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <div>
-      <Header /> {/* Header is now always displayed */}
+      <Header /> 
 
-      <h2>Action Logs</h2>
+      <Typography variant="h4" align="center" gutterBottom sx={{ mt: 0 }}> 
+        User Action History
+      </Typography>
 
-      {/* Conditionally render content based on loading and error states */}
-      {loading && <p>Loading...</p>} 
-      {error && <p>{error}</p>}
-      {!loading && !error && actionLogs.length === 0 && <p>No action logs found.</p>}
+      <TableContainer component={Paper} sx={{ mt: 0 }}> {/* Add some top margin */}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>User ID</TableCell>
+              <TableCell>Action Type</TableCell>
+              <TableCell>Blog ID</TableCell>
+              <TableCell>Post ID</TableCell>
+              <TableCell>Timestamp</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  Loading...
+                </TableCell>
+              </TableRow>
+            )}
+            {error && (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  {error}
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && !error && currentLogs.length === 0 && ( 
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  No action logs found.
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading && !error && currentLogs.map((log, index) => (
+              <TableRow key={index}>
+                <TableCell>{log.userId}</TableCell>
+                <TableCell sx={{ display: 'flex', alignItems: 'center' }}> 
+                  {actionTypeMapping[log.actionType] || log.actionType} 
+                </TableCell>
+                <TableCell>{log.blogId || 'N/A'}</TableCell>
+                <TableCell>{log.postId || 'N/A'}</TableCell>
+                <TableCell>{formatDate(log.timestamp)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-      {/* Display the table only when not loading and there are action logs */}
-      {!loading && !error && actionLogs.length > 0 && ( 
-        <table className="action-logs-table">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Action Type</th>
-              <th>Blog ID</th>
-              <th>Post ID</th>
-              <th>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-              {actionLogs.map((log, index) => (
-                <tr key={index}>
-                  <td>{log.userId}</td>
-                  <td>{log.actionType}</td>
-                  <td>{log.blogId || 'N/A'}</td>
-                  <td>{log.postId || 'N/A'}</td>
-                  <td>{formatDate(log.timestamp)}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      )}
+      {/* Pagination */}
+      <Pagination 
+        count={Math.ceil(actionLogs.length / itemsPerPage)} 
+        page={currentPage} 
+        onChange={handlePageChange} 
+        sx={{ mt: 2, display: 'flex', justifyContent: 'center' }} 
+      />
     </div>
   );
 };
