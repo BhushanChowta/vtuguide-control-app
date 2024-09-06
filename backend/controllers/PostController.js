@@ -149,6 +149,8 @@ exports.contributePost = async (req, res) => {
 
     // 3. Save the post to the database
     const savedPost = await newPost.save();
+  
+    logAction('0', 'CONTRIBUTED_POST', blogId, savedPost._id);
 
     // 4. Send a success response
     res.status(200).json({ 

@@ -67,7 +67,7 @@ const PublicBlogSubmission = () => {
             />
 
             <TextField
-              label="Content"
+              label="Content (+Drive Link)"
               multiline
               rows={10} 
               variant="outlined"
