@@ -4,7 +4,7 @@ import AnalyticsComponent from '../components/AnalyticsComponent';
 import BloggerPosts from '../components/BloggerPosts';
 import { AuthContext } from '../contexts/AuthContext';
 import Header from '../components/Header'; // Import the Header component
-import { List, ListItem, ListItemText, Typography, Button } from '@mui/material'; // Import Material-UI components
+import { List, ListItem, ListItemText, Typography, Box, Paper } from '@mui/material'; 
 
 const Dashboard = () => {
   const { blogs, setBlogs, selectedBlogId, setSelectedBlogId, accessToken, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
@@ -28,22 +28,33 @@ const Dashboard = () => {
       <Header />
 
       {!selectedBlogId && accessToken && (
-        <div>
-          <Typography variant="h5" gutterBottom>
-            Select a Blog:
-          </Typography>
-          {blogs.length > 0 ? (
-            <List>
-              {blogs.map((blog) => (
-                <ListItem button key={blog.id} onClick={() => handleBlogSelect(blog.id)}>
-                  <ListItemText primary={blog.name} />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography variant="body1">No blogs found.</Typography>
-          )}
-        </div>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+          <Paper elevation={3} sx={{ p: 3, textAlign: 'center' }}> {/* Use Paper for a card-like style */}
+            <Typography variant="h5" gutterBottom>
+              Select a Blog to Get Started
+            </Typography>
+            {blogs.length > 0 ? (
+              <List>
+                {blogs.map((blog) => (
+                  <ListItem 
+                    button 
+                    key={blog.id} 
+                    onClick={() => handleBlogSelect(blog.id)}
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)'
+                      }
+                    }}
+                  >
+                    <ListItemText primary={blog.name} />
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography variant="body1">No blogs found.</Typography>
+            )}
+          </Paper>
+        </Box>
       )}
       
       {selectedBlogId && (

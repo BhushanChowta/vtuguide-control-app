@@ -24,13 +24,6 @@ const App = () => {
         {!accessToken &&
           <GoogleLoginComponent />
         }
-        {accessToken && !selectedBlogId && (
-          <div>
-            <Button component={Link} to="/dashboard" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
-              Dashboard
-            </Button>
-          </div>
-        )}
       </div>
       <Outlet />
     </GoogleProvider>
