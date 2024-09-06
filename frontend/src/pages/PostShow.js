@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import Header from '../components/Header'; // Assuming you have a Header component
+import { Typography, Button, Container, Box } from '@mui/material'; // Import Material-UI components
 
 const PostShow = () => {
   const { postId } = useParams();
@@ -59,22 +60,39 @@ const PostShow = () => {
     <div>
       <Header /> {/* Display the Header component */}
 
-      {loading && <p>Loading post details...</p>}
-      {error && <p>Error: {error}</p>}
-      {post && ( 
-        <div>
-          <h2>{post.title}</h2>
-          <h4>
+      <Container maxWidth="md"> {/* Limit container width for better readability */}
+        {loading && <Typography variant="body1">Loading post details...</Typography>}
+        {error && <Typography variant="body1" color="error">Error: {error}</Typography>}
+
+        {!loading && !error && post && (
+          <Box sx={{ mt: 2 }}> {/* Add some top margin */}
+            <Typography variant="h4" gutterBottom>{post.title}</Typography>
+
+            <Button 
+              component={Link} 
+              to={`/edit-post/${post.id}`} 
+              variant="outlined" 
+              sx={{ mb: 2, mr: 2 }} // Add margins
+            >
+              Edit
+            </Button>
+
             {post.status === 'DRAFT' && (
-              <button onClick={() => handleDeletePost(post.id, post.title)}>
+              <Button 
+                variant="contained" 
+                color="error" 
+                onClick={() => handleDeletePost(post.id, post.title)}
+                sx={{ mb: 2, mr: 2 }} // Add bottom margin
+              >
                 Delete
-              </button>
+              </Button>
             )}
-          </h4>
-          <h4><Link to={`/edit-post/${post.id}`}>Edit</Link></h4>
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        </div>
-      )}
+
+            {/* Render HTML content */}
+            <div dangerouslySetInnerHTML={{ __html: post.content }} /> 
+          </Box>
+        )}
+      </Container>
     </div>
   );
 };
