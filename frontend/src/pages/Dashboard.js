@@ -1,20 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate  } from 'react-router-dom';
 import AnalyticsComponent from '../components/AnalyticsComponent';
 import BloggerPosts from '../components/BloggerPosts';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Dashboard = () => {
-  const { blogs, selectedBlogId, setSelectedBlogId, accessToken } = useContext(AuthContext);
-
-
+  const { blogs, setBlogs, selectedBlogId, setSelectedBlogId, accessToken, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleBlogSelect = async (blogId) => {
     setSelectedBlogId(blogId);
   };
 
+  // Sign-out function
+  const handleSignOut = () => {
+    setBlogs([]); // Clear the blogs
+    setSelectedBlogId(null);
+    setAccessToken(null); // Clear the access token
+    setAnalyPropertyId(null); // Clear the Analytics property ID
 
+    // Redirect to the home page
+    navigate('/');
+  };
 
   return (
     <div>
@@ -37,6 +44,11 @@ const Dashboard = () => {
       {selectedBlogId && <Link to="/actionlogs">Action Logs</Link>}
       {selectedBlogId && <>||</>}
       {selectedBlogId && <Link to="/create-post">Create New Post</Link>}
+      {selectedBlogId &&  
+        <button onClick={handleSignOut}>
+          Sign Out
+        </button>
+      }
       {selectedBlogId && <AnalyticsComponent />}
       {selectedBlogId && <BloggerPosts />}
     </div>
