@@ -19,4 +19,6 @@
 ### UserActions Log Page
 ![UserActions Page](./frontend/public/assets/actionlogs.PNG)
 
+### Public Post Contribution Page
+![Public Post Contribution Page](./frontend/public/assets/contributePost.PNG)
 

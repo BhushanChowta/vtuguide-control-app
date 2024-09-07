@@ -59,7 +59,7 @@ const BloggerPosts = () => {
         if (aTag && aTag.href) {
             return aTag.href; // Return the href of the a tag
         }
-        return "https://via.assets.so/img.jpg?w=400&h=200&tc=blue&bg=#cecece&t=placeholder"; // If no image or href found
+        return "https://via.assets.so/img.jpg"; // If no image or href found
     };
 
     return (
