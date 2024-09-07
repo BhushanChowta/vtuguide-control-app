@@ -77,7 +77,6 @@ const PublicBlogSubmission = () => {
               margin="normal"
             />
 
-            {/* Template Section */}
             {/* Template Section (Dropdown) */}
             <Box sx={{ mt: 2, border: '1px solid #ccc', p: 2, borderRadius: 4 }}>
               <Typography variant="subtitle1" gutterBottom onClick={() => setShowTemplate(!showTemplate)}>
@@ -93,17 +92,13 @@ const PublicBlogSubmission = () => {
                   You can use this template to format your content:
                 </Typography>
                 <pre>
-{`
-<div class="separator" style="clear: both; text-align: center;">
-  <a href="IMAGE_URL_HERE" style="margin-left: 1em; margin-right: 1em;">
-    <img border="0" data-original-height="360" data-original-width="660" height="175" src="" width="320" />
-  </a>
+{`<div class="separator" style="clear: both; text-align: center;">
+    <img height="175" width="320" src="IMAGE_URL_HERE" />
 </div>
 <p>DESCRIPTION HERE</p>
 <iframe allow="autoplay" height="480" width="640"
   src="https://drive.google.com/file/d/YOUR_DRIVE_LINK_HERE/preview" 
-></iframe>
-`}
+></iframe>`}
                 </pre>
               </Collapse>
             </Box>
