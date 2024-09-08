@@ -30,3 +30,5 @@ yarn-error.log*
 # Ignore credentials.json and token.json files
 /backend/credentials.json
 /backend/token.json
+
+/test
