@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import UploadIcon  from '@mui/icons-material/Backup'; // Import the icon
 
 const ActionLogs = () => {
   const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); 
@@ -59,6 +60,7 @@ const ActionLogs = () => {
     'CREATE_POST': <><AddCircleOutlineIcon /> &nbsp; Created Post</>,
     'DELETE_POST': <><DeleteIcon /> &nbsp; Deleted Post</>, 
     'EDIT_POST': <><EditIcon /> &nbsp; Edited Post</>,
+    'DUMPED_POST': <><UploadIcon   /> &nbsp; Dumped Post</>,
   };
 
   // Calculate pagination values

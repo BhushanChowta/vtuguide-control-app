@@ -129,7 +129,7 @@ const PostSubmissions = () => {
                     )}
                     {!post.blogPostID &&
                         <Button variant="contained" color="primary" onClick={() => handleCreatePost(post)}>
-                        Dump Post
+                        {loading ? 'Dumping...' : 'Dump Post'}
                         </Button>
                     }
                   </Box>
