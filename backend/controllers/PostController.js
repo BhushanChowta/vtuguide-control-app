@@ -6,7 +6,7 @@ const Post = require('../models/Post'); // Import your Post model
 
 
 exports.createPost = async (req, res) => {
-    const { blogId, title, content, accessToken } = req.body;
+    const { blogId, title, content, accessToken, submissionId } = req.body;
     const userId = await fetchGoogleUserId(accessToken);
   
     try {
@@ -22,9 +22,15 @@ exports.createPost = async (req, res) => {
           },
           isDraft: true, // Set the post to be a draft
         });
-  
-        logAction(userId, 'CREATE_POST', blogId, response.data.id);
-  
+
+        // Update the submission status if submissionId (MongoDB Data) is provided
+        if (submissionId) {
+          await Post.findByIdAndUpdate(submissionId, { status: 'REVIEWED' , blogPostID: response.data.id});
+          logAction(userId, 'DUMPED_POST', blogId, response.data.id);
+        } else {
+          logAction(userId, 'CREATE_POST', blogId, response.data.id);
+        }
+
         res.status(200).json(response.data);
       } catch (error) {
         res.status(error.response?.status || 500).json({ error: error.message });
@@ -121,7 +127,10 @@ exports.deletePost = async (req, res) => {
           postId: postId,
         });
         // res.status(200).json(response.data);
-  
+
+        //Delete from your Post model (if it exists)
+        await Post.findOneAndDelete({ blogPostID: postId });
+
         logAction(userId, 'DELETE_POST', blogId, postId);
   
         res.status(200).json({ message: `${postId} Post deleted successfully` });
@@ -163,6 +172,18 @@ exports.contributePost = async (req, res) => {
     res.status(500).json({ message: 'An error occurred during submission.' });
   }
 };
+
+exports.postSubmissions = async (req, res) => {
+  const { blogId, accessToken } = req.query;
+
+  try {
+    const logs = await Post.find({ blogId });
+
+    res.status(200).json(logs);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+}
 
 const fetchGoogleUserId = async (accessToken) => {
     try {

@@ -14,6 +14,14 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ['NOT_REVIEWED', 'REVIEWED'], 
+    default: 'NOT_REVIEWED' 
+  },
+  blogPostID: {
+    type: String,
+  },
   timestamp: {
     type: Date,
     default: Date.now,

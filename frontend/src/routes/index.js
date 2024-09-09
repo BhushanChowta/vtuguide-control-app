@@ -6,6 +6,7 @@ import PublicBlogSubmission from '../components/PublicBlogSubmission';
 import ActionLogs from '../pages/ActionLogs';
 import PostShow from '../pages/PostShow';
 import Dashboard from '../pages/Dashboard';
+import PostSubmissions from '../pages/PostSubmissions';
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             {
                 path: "actionlogs",
                 element: <ActionLogs />,
+            },
+            {
+                path: "postSubmissions",
+                element: <PostSubmissions />,
             },
         ]
     },

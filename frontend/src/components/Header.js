@@ -30,6 +30,9 @@ const Header = () => {
             <Button component={Link} to="/create-post" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
               Create New Post
             </Button>
+            <Button component={Link} to="/postSubmissions" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
+              Submissions
+            </Button>
           </div>
           <Button onClick={handleSignOut} variant="outlined" size="small" color="secondary">
             Sign Out
