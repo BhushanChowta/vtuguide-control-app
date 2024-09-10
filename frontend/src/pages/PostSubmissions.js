@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
-import { Box, Grid, Typography, Button } from '@mui/material';
+import { Box, Grid, Typography, Button, Chip } from '@mui/material';
 import Header from '../components/Header'; 
 
 const PostSubmissions = () => {
@@ -109,6 +109,7 @@ const PostSubmissions = () => {
                     }}
                   >
                     {post.blogPostID ? (
+                    <>
                     <Link to={`/post/${post.blogPostID}`} style={{ textDecoration: 'none' }}>
                         {post.imageUrl && (
                         <img src={post.imageUrl} alt={post.title} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
@@ -117,6 +118,16 @@ const PostSubmissions = () => {
                         {post.title}
                         </Typography>
                     </Link>
+                    <Chip 
+                        label="Outdated" 
+                        color="warning"
+                        sx={{ 
+                        position: 'relative', 
+                        top: 8, 
+                        right: 8 
+                        }} 
+                    />
+                    </>
                     ) : ( 
                     <> 
                         {post.imageUrl && (
