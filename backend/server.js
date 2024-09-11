@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 const postRouter = require('./routes/post');
 const blogRouter = require('./routes/blog');
 const userActionRouter = require('./routes/userAction');
+const userRouter = require('./routes/user');
 
 // Initialize the app
 const app = express();
@@ -25,6 +26,7 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 app.use('/api', blogRouter.routes);
 app.use('/api', postRouter.routes);
 app.use('/api', userActionRouter.routes);
+app.use('/api', userRouter.routes);
 
 // Setup OAuth2 client
 const oauth2Client = new google.auth.OAuth2(

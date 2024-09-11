@@ -14,6 +14,11 @@ const GoogleLoginComponent = () => {
       console.log("tokenResponse", tokenResponse);
       const accessToken = tokenResponse.access_token;
       setAccessToken(accessToken); 
+
+      const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, {
+        accessToken: accessToken, 
+      });
+
       await fetchPropertyId(accessToken); 
       await fetchBloggerData(accessToken);
     },
