@@ -24,7 +24,7 @@ exports.signInUser = async (req, res) => {
         name: userInfo.name,
         email: userInfo.email,
         googleID: userInfo.sub,
-        // Add other relevant fields from userInfo if needed
+        accessToken: accessToken,
       });
       await user.save();
 

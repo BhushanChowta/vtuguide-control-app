@@ -2,7 +2,8 @@ const axios = require('axios');
 const { google } = require('googleapis');
 const blogger = google.blogger('v3');
 const logAction = require('../utils/logAction');
-const Post = require('../models/Post'); // Import your Post model
+const Post = require('../models/Post'); 
+const User = require('../models/User'); 
 
 
 exports.createPost = async (req, res) => {
@@ -186,15 +187,16 @@ exports.postSubmissions = async (req, res) => {
 }
 
 const fetchGoogleUserId = async (accessToken) => {
-    try {
-      const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      return response.data.sub; // User ID from Google
-    } catch (error) {
-      console.error('Error fetching user info:', error);
-      throw error;
+  try {
+    const user = await User.findOne({ accessToken: accessToken }); 
+
+    if (!user) {
+      throw new Error('User not found'); 
     }
-  };
+
+    return user.googleID; // Return the user's ID from your database
+  } catch (error) {
+    console.error('Error fetching user from database:', error);
+    throw error; 
+  }
+};
