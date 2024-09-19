@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    picture: {
+        type: String,
+        required: true,
+    },
     googleID: {
         type: String,
         required: true,

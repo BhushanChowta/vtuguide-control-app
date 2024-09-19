@@ -23,6 +23,7 @@ exports.signInUser = async (req, res) => {
       user = new User({
         name: userInfo.name,
         email: userInfo.email,
+        picture: userInfo.picture,
         googleID: userInfo.sub,
         accessToken: accessToken,
       });
@@ -39,3 +40,23 @@ exports.signInUser = async (req, res) => {
     res.status(500).json({ error: 'Failed to create user' });
   }
 };
+
+// getUser 
+// exports.getUser = async (req, res) => {
+//   const { accessToken } = req.body;
+
+//   try {
+//     // Check if user exists in your database
+//     let user = await User.findOne({ accessToken: accessToken });
+//     // If user doesn't exist, create a new user
+//     if (user) { 
+//       return res.json(user);  
+//     } else {
+//       // Handle case where user is not found (maybe send 404)
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+//   } catch (error) {
+//     console.error('Error during user fetch:', error);
+//     res.status(500).json({ error: 'Failed to get user' });
+//   }
+// };

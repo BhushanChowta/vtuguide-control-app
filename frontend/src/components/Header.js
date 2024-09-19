@@ -1,15 +1,16 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 
 const Header = () => {
-  const { selectedBlogId, setBlogs, setSelectedBlogId, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
+  const { userInfo, selectedBlogId, setUserInfo, setBlogs, setSelectedBlogId, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Sign-out function
   const handleSignOut = () => {
     setBlogs([]);
+    setUserInfo(null);
     setSelectedBlogId(null);
     setAccessToken(null);
     setAnalyPropertyId(null);
@@ -34,9 +35,23 @@ const Header = () => {
               Submissions
             </Button>
           </div>
-          <Button onClick={handleSignOut} variant="outlined" size="small" color="secondary">
-            Sign Out
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}> {/* Container for username and signout */}
+            {userInfo && ( 
+              <>
+                {/* <Typography variant="subtitle1" sx={{ mr: 2 }}>Hello, {userInfo['name']}!</Typography> */}
+                {userInfo['picture'] && (
+                  <img 
+                    src={userInfo['picture']} 
+                    alt="Profile" 
+                    style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} 
+                  />
+                )}
+              </>
+            )}
+            <Button onClick={handleSignOut} variant="outlined" size="small" color="secondary">
+              Sign Out
+            </Button>
+          </Box>
         </Box>
       )}
     </div>

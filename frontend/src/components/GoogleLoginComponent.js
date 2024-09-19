@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Button } from '@mui/material';
 
 const GoogleLoginComponent = () => {
-  const { setBlogs, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
+  const { setUserInfo, setBlogs, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
 
   const login = useGoogleLogin({
     scope: 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/blogger',
@@ -18,6 +18,7 @@ const GoogleLoginComponent = () => {
       const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/login`, {
         accessToken: accessToken, 
       });
+      setUserInfo(user.data);
 
       await fetchPropertyId(accessToken); 
       await fetchBloggerData(accessToken);

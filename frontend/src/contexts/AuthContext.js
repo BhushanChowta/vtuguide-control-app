@@ -25,10 +25,19 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem(key, JSON.stringify(item));
   };
 
+  const [userInfo, setUserInfo] = useState(getItemWithExpiry('userInfo'));
   const [accessToken, setAccessToken] = useState(getItemWithExpiry('accessToken'));
   const [selectedBlogId, setSelectedBlogId] = useState(getItemWithExpiry('selectedBlogId'));
   const [blogs, setBlogs] = useState(getItemWithExpiry('blogs') || []);
   const [analyPropertyId, setAnalyPropertyId] = useState(getItemWithExpiry('analyPropertyId'));
+
+  useEffect(() => {
+    if (userInfo) {
+      setItemWithExpiry('userInfo', userInfo);
+    } else {
+      localStorage.removeItem('userInfo');
+    }
+  }, [userInfo]);
 
   useEffect(() => {
     if (accessToken) {
@@ -64,6 +73,8 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{
+      userInfo, 
+      setUserInfo,
       accessToken,
       setAccessToken,
       selectedBlogId,
