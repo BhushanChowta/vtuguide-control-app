@@ -8,8 +8,8 @@ const User = require('../models/User');
 
 exports.getUserActionLogs =  async (req, res) => {
   try {
-    const { blogId,accessToken } = req.query; // Get the blogId from query parameters
-    const userId = await fetchGoogleUserId(accessToken);
+    const { blogId, googleID, accessToken } = req.query; // Get the blogId from query parameters
+    const userId = googleID;
 
     // Validate Params
     if (!blogId || !userId) {
@@ -24,18 +24,3 @@ exports.getUserActionLogs =  async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch action logs' });
   }
 }
-
-const fetchGoogleUserId = async (accessToken) => {
-  try {
-    const user = await User.findOne({ accessToken: accessToken }); 
-
-    if (!user) {
-      throw new Error('User not found'); 
-    }
-
-    return user.googleID; // Return the user's ID from your database
-  } catch (error) {
-    console.error('Error fetching user from database:', error);
-    throw error; 
-  }
-};

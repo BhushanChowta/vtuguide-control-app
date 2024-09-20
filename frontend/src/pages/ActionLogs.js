@@ -9,7 +9,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import UploadIcon  from '@mui/icons-material/Backup'; // Import the icon
 
 const ActionLogs = () => {
-  const { selectedBlogId: blogId, accessToken } = useContext(AuthContext); 
+  const { selectedBlogId: blogId, userInfo, accessToken } = useContext(AuthContext); 
   const [actionLogs, setActionLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,7 +26,7 @@ const ActionLogs = () => {
 
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/actionlogs`, {
-          params: { blogId, accessToken }
+          params: { blogId, accessToken, googleID: userInfo.googleID }
         });
         setActionLogs(response.data.reverse()); // Reverse the order of the logs
       } catch (error) {
