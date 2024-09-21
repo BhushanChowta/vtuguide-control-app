@@ -44,6 +44,7 @@ const Header = () => {
                     src={userInfo['picture']} 
                     alt="Profile" 
                     style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} 
+                    onError={(e) => { e.target.onerror = null; e.target.src = `${userInfo['picture']}` ; }} //https://via.placeholder.com/30x30?text=
                   />
                 )}
               </>
