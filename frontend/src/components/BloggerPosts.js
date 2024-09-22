@@ -83,7 +83,7 @@ const BloggerPosts = () => {
                         borderRadius: '4px',
                         p: 2,
                         '&:hover': {
-                        boxShadow: 3, // Add a box shadow on hover
+                        boxShadow: 3,
                         },
                     }}
                     >
