@@ -7,6 +7,7 @@ import ActionLogs from '../pages/ActionLogs';
 import PostShow from '../pages/PostShow';
 import Dashboard from '../pages/Dashboard';
 import PostSubmissions from '../pages/PostSubmissions';
+import SearchPosts from '../components/SearchPosts';
 
 const router = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
             {
                 path: "postSubmissions",
                 element: <PostSubmissions />,
+            },
+            {
+                path: "searchPosts",
+                element: <SearchPosts />,
             },
         ]
     },

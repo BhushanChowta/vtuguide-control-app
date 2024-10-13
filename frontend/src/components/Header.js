@@ -34,6 +34,9 @@ const Header = () => {
             <Button component={Link} to="/postSubmissions" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
               Submissions
             </Button>
+            <Button component={Link} to="/searchPosts" variant="outlined" size="small" color="primary" sx={{ mr: 1 }}>
+              Search Posts
+            </Button>
           </div>
           <Box sx={{ display: 'flex', alignItems: 'center' }}> {/* Container for username and signout */}
             {userInfo && ( 
