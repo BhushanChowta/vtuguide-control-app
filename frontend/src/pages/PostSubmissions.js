@@ -30,7 +30,7 @@ const PostSubmissions = () => {
               setPosts(postsWithImages);
             } catch (error) {
                 if (error.response && error.response.status === 401) {
-                    console.error('Unauthorized. Signing out...');
+                    console.error('Unauthorized. Signing out..');
                     setBlogs([]);
                     setSelectedBlogId(null);
                     setAccessToken(null);
