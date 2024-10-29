@@ -5,7 +5,7 @@
 
 • Includes a feature that allows users to contribute posts, which can be reviewed and published on the website. 
 
-## Available Features (Note: Beta Version)
+## Available Features (Note: Beta Version) 
 
 ### Dashboard Page
 ![Dashboard Page](./frontend/public/assets/dashboard.PNG)
