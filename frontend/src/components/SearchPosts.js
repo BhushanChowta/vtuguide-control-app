@@ -8,6 +8,7 @@ import { TextField, Button, Container, Typography } from '@mui/material';
 const SearchPosts = () => {
   const { blogs, selectedBlogId, accessToken, setBlogs, setSelectedBlogId, setAccessToken, setAnalyPropertyId } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
+  const [searching, setIsSearching] = useState(null);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -27,12 +28,15 @@ const SearchPosts = () => {
 
         // Set the posts to state
         if(response.data.items){
+          setIsSearching(false);
           setPosts(response.data.items);
         } else {
+          setIsSearching(false);
           setPosts([]);
         }
         setError(null);
       } catch (err) {
+        setIsSearching(false);
         setPosts([]);
         setError(err.message);
       }
@@ -40,6 +44,7 @@ const SearchPosts = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    setIsSearching(true);
     fetchPosts();
   };
 
@@ -78,7 +83,9 @@ const SearchPosts = () => {
       </form>
       {error && <div>Error fetching posts: {error}</div>}
       {posts.length === 0 ? (
-        <p>No posts found.</p>
+        searching === true ?
+        (<p>Searching...</p>):
+        (<p>No posts found.</p>)
       ) : (
         <ul>
           {posts.map((post) => (
