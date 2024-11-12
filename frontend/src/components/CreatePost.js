@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
-import { Typography, TextField, Button, Container, Box } from '@mui/material'; 
+import { Typography, TextField, Button, Container, Box, Alert } from '@mui/material';
 
 const CreatePost = () => {
   const { selectedBlogId: blogId, accessToken } = useContext(AuthContext);
@@ -12,7 +12,22 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const navigate = useNavigate();
+
+  // Removed useEffect that was automatically generating content
+
+  const generateContent = async () => { // Changed to be triggered by button click
+    setGenerating(true);
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/generate-content`, { title });
+      setContent(response.data.formattedContent);
+    } catch (error) {
+      console.error('Error generating content:', error);
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +40,7 @@ const CreatePost = () => {
         blogId,
         title,
         content,
-        accessToken
+        accessToken,
       });
 
       if (response.status === 200) {
@@ -33,7 +48,7 @@ const CreatePost = () => {
         navigate(`/post/${response.data.id}`); 
       }
     } catch (error) {
-      setError(error.message);
+      setError(error.message || 'An error occurred while creating the post.');
     } finally {
       setLoading(false);
     }
@@ -41,60 +56,67 @@ const CreatePost = () => {
 
   return (
     <div>
-        <Header />
-        <Container maxWidth="md"> 
-        <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}> 
-            <Typography variant="h4" gutterBottom>
+      <Header />
+      <Container maxWidth="md">
+        <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}>
+          <Typography variant="h4" gutterBottom>
             Create New Post
-            </Typography>
+          </Typography>
 
-            <form onSubmit={handleSubmit}>
-            <div>
-                <TextField
-                label="Title"
-                variant="outlined"
-                fullWidth 
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                margin="normal" 
-                />
-            </div>
-            <div>
-                <TextField
-                label="Content"
-                multiline
-                rows={10} 
-                variant="outlined"
-                fullWidth 
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                required
-                margin="normal" 
-                />
-            </div>
-            <Button
-                type="submit"
-                disabled={loading}
-                variant="contained"
-                color="primary"
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Title"
+              variant="outlined"
+              fullWidth
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              margin="normal"
+            />
+            <Button 
+              variant="contained" 
+              color="secondary" 
+              onClick={generateContent} 
+              disabled={!title || generating}
+              sx={{ mt: 2 }}
             >
-                {loading ? 'Creating...' : 'Create Post'}
+              {generating ? 'Generating...' : 'Generate Content'}
             </Button>
-            </form>
+            <TextField
+              label="Content"
+              multiline
+              rows={10}
+              variant="outlined"
+              fullWidth
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              required
+              margin="normal"
+              placeholder="Start typing or edit generated content" 
+            />
+            <Button
+              type="submit"
+              disabled={loading || generating}
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              {loading ? 'Creating...' : 'Create Post'}
+            </Button>
+          </form>
 
-            {error && (
-            <Typography variant="body1" color="error" sx={{ mt: 2 }}>
-                Error: {error}
-            </Typography>
-            )}
-            {success && (
-            <Typography variant="body1" color="success" sx={{ mt: 2 }}>
-                Post created successfully!
-            </Typography>
-            )}
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              Post created successfully!
+            </Alert>
+          )}
         </Box>
-        </Container>
+      </Container>
     </div>
   );
 };

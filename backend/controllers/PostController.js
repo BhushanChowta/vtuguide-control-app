@@ -186,6 +186,41 @@ exports.postSubmissions = async (req, res) => {
   }
 }
 
+exports.generateContent = async (req, res) => {
+  const { title } = req.body;
+
+  try {
+    const response = await axios.post(
+      'https://api-inference.huggingface.co/models/facebook/bart-large-cnn',
+      {
+        inputs: `Explain "${title}". `, 
+        parameters: { max_length: 500 }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+        },
+      }
+    );
+    
+    const content = response.data[0]?.summary_text || 'Unable to generate content.';
+
+    // Format the content with the desired HTML structure
+    const formattedContent = `
+    <div class="separator" style="clear: both; text-align: center;">
+      <img height="175" width="320" src="https://via.placeholder.com/320x175" />
+    </div>
+    <p>${content}</p>
+    <iframe allow="autoplay" height="480" width="640" src="https://drive.google.com/file/d/-/preview"></iframe>
+    `;
+
+    res.json({ formattedContent });
+  } catch (error) {
+    console.error('Error generating content:', error);
+    res.status(500).json({ message: 'Error generating content.' });
+  }
+}
+
 const fetchGoogleUserId = async (accessToken) => {
   try {
     const user = await User.findOne({ accessToken: accessToken }); 

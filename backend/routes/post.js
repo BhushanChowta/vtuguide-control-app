@@ -10,6 +10,7 @@ routes
 .put('/edit-post/:postId',PostController.editPost)
 .delete('/delete-post/:postId',PostController.deletePost)
 .post('/contribute-post',PostController.contributePost)
-.get('/postSubmissions',PostController.postSubmissions);
+.get('/postSubmissions',PostController.postSubmissions)
+.post('/generate-content',PostController.generateContent);
 
 exports.routes=routes;
