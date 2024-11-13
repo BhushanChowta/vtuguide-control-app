@@ -191,10 +191,10 @@ exports.generateContent = async (req, res) => {
 
   try {
     const response = await axios.post(
-      'https://api-inference.huggingface.co/models/facebook/bart-large-cnn',
+      'https://api-inference.huggingface.co/models/openai-community/gpt2',
       {
-        inputs: `Explain "${title}". `, 
-        parameters: { max_length: 500 }
+        inputs: `Write a detailed blog post about the topic: "${title}". `, 
+        parameters: { max_length: 500 },
       },
       {
         headers: {
@@ -203,7 +203,9 @@ exports.generateContent = async (req, res) => {
       }
     );
     
-    const content = response.data[0]?.summary_text || 'Unable to generate content.';
+    // console.log(response.data);
+
+    const content = response.data[0]?.generated_text || 'Unable to generate content.';
 
     // Format the content with the desired HTML structure
     const formattedContent = `
