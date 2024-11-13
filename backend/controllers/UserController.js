@@ -32,6 +32,10 @@ exports.signInUser = async (req, res) => {
       // Respond with the newly created user
       res.json(user); 
     } else {
+      // User already exists, update the access token
+      user.accessToken = accessToken;
+      await user.save();
+      
       // User already exists, send the existing user data
       res.json(user); 
     }
